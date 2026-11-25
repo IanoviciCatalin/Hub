@@ -12,8 +12,8 @@ export const profile = {
   headlineMutedLine: 1,
   intro: "Inginer si dezvoltator. Aici sunt proiectele mele, de la firmware pana la aplicatii.",
   about: [
-    "Sunt in anul 4 la Automatica si Calculatoare, la UPT, si studiez Ingineria Sistemelor. Imi place sa fac aplicatii care rezolva probleme reale. De obicei, ideile imi vin cand vad cat timp pierde cineva facand aceiasi pasi de fiecare data.",
-    "Atunci ma intreb \u201eoare pot sa automatizez asta?\u201d si incep sa incerc. Asta imi place cel mai mult la programare: sa vad ca ceva facut de mine chiar ii usureaza cuiva munca.",
+    "Sunt anul 4 la Automatica si Calculatoare, UPT si studiez Ingineria Sistemelor. Pasiunea mea este sa dezvolt aplicatii care rezolva probleme reale. De obicei ideile imi vin cand observ cat timp pierde repetand aceiasi pasi.",
+    "Atunci ma intreb \u201eoare pot sa automatizez asta?\u201d si incep sa lucrez. Cel mai mult imi place cand vad ca o aplicatie facuta de mine chiar ii face cuiva munca mai usoara.",
   ],
   skills: {
     Limbaje: ["C#", "Java", "C", "SQL", "TypeScript"],
