@@ -45,7 +45,10 @@ export const projects: Project[] = [
     tech: ["JavaScript", "HTML", "CSS", "MapLibre GL", "PWA"],
     featured: true,
     links: { demo: "/unipulse/" },
-    gallery: [{ src: "/projects/unipulse/preview.png", alt: "Ecranul principal UniPulse cu lista de evenimente" }],
+    gallery: [
+      { src: "/projects/unipulse/preview.webp", alt: "UniPulse pe mobil, tema dark: harta, lista de evenimente si detaliile unui eveniment" },
+      { src: "/projects/unipulse/desktop.webp", alt: "UniPulse pe desktop, tema dark: lista de evenimente si harta Timisoarei" },
+    ],
     sections: [
       {
         title: "Ce face",
