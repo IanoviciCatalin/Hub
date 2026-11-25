@@ -9,7 +9,11 @@
     // Emailurile conturilor care vad panoul /unipulse/admin/ (separate prin virgula).
     "UNIPULSE_ADMINS": "cata45513@gmail.com",
     // Origini suplimentare acceptate pentru cereri POST (de ex. un domeniu nou).
-    "UNIPULSE_ORIGINS": "https://ianovici.dev"
+    "UNIPULSE_ORIGINS": "https://ianovici.dev",
+    // Importul automat de evenimente: "true" doar după aprobarea pentru producție.
+    // Cu "false", adminul poate rula doar simulări (citesc sursa, nu scriu în catalog).
+    "INGEST_ENABLED": "true",
+    "INGEST_USER_AGENT": "UniPulseEventImport/1.0 (+https://site-hub-beige.vercel.app/unipulse/)"
   },
   "durable_objects": {
     "bindings": [{ "name": "UNIPULSE_HUB", "class_name": "UniPulseHub" }]

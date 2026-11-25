@@ -45,6 +45,9 @@ window.UniPulseSocial = (() => {
     TEAM_NOT_FOUND: 'Postarea a fost ștearsă sau ascunsă.',
     OWN_TEAM: 'Este postarea ta.',
     SYNC_TOO_LARGE: 'Datele sunt prea mari pentru sincronizare.',
+    INGEST_DISABLED: 'Importul real este oprit până la aprobarea pentru producție. Poți rula doar o simulare.',
+    RUN_TOO_SOON: 'Sursa a fost rulată acum mai puțin de 10 minute. Încearcă puțin mai târziu.',
+    REVIEW_CLOSED: 'Propunerea a fost deja rezolvată.',
   });
   // account: profilul de pe acest dispozitiv. Are hasPassword=false dacă e un profil vechi, fără email.
   let account;
@@ -110,6 +113,11 @@ window.UniPulseSocial = (() => {
       account: (id, action) => api(`/api/unipulse/admin/account/${encodeURIComponent(id)}/${action}`, { method: 'POST', body: {} }),
       status: (kind, id, status) => api(`/api/unipulse/admin/${kind}/${encodeURIComponent(id)}/status`, { method: 'POST', body: { status } }),
       message: (id, action) => api(`/api/unipulse/admin/message/${Number(id)}/${action}`, { method: 'POST', body: {} }),
+      importOverview: () => api('/api/unipulse/admin/import'),
+      importSource: (id, changes) => api(`/api/unipulse/admin/import/source/${encodeURIComponent(id)}`, { method: 'POST', body: changes }),
+      importRun: (id, dryRun = true) => api(`/api/unipulse/admin/import/source/${encodeURIComponent(id)}/run`, { method: 'POST', body: { dryRun } }),
+      importReview: (id, action) => api(`/api/unipulse/admin/import/review/${Number(id)}`, { method: 'POST', body: { action } }),
+      importEvent: (id, state) => api(`/api/unipulse/admin/import/event/${encodeURIComponent(id)}`, { method: 'POST', body: { state } }),
     },
     event: (id) => api(eventPath(id)),
     counts: (ids) => api('/api/unipulse/counts?ids=' + ids.map(encodeURIComponent).join(',')),
@@ -120,6 +128,8 @@ window.UniPulseSocial = (() => {
     rooms: () => api('/api/unipulse/me'),
     deleteMessage: (id, messageId) => api(eventPath(id) + '/messages/' + Number(messageId) + '/delete', { method: 'POST', body: {} }),
     reportMessage: (id, messageId) => api(eventPath(id) + '/messages/' + Number(messageId) + '/report', { method: 'POST', body: {} }),
+    // Evenimentele importate automat din surse oficiale (doar citire).
+    listCatalog: (city) => api('/api/unipulse/catalog?city=' + encodeURIComponent(city)),
     // Evenimentele comunității: vizibile tuturor, salvate pe server.
     listEvents: (city) => api('/api/unipulse/events?city=' + encodeURIComponent(city)),
     createEvent: (data) => api('/api/unipulse/events', { method: 'POST', body: data }),

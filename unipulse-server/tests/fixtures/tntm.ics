@@ -1,0 +1,65 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//wp-events-plugin.com//6.1.4//EN
+BEGIN:VEVENT
+UID:1447@tntm.ro
+DTSTART:20261125T170000Z
+DTEND:20261125T170000Z
+DTSTAMP:20261105T104225Z
+URL:https://www.tntm.ro/programul-lunii/absurdinia-12/
+SUMMARY:ABSURDINIA - Studio "UTU Strugari" - 25 nov. 26 19:00
+DESCRIPTION:ABSURDINIA\n\n[DKB url="https://www.eventim.ro/event/absurdinia
+ -teatrul-national-timisoara-studio-utu-strugari-22224342/" text="Cumpără
+  bilet" title="Cumpără bilet" type="large" style="gradient" color="red" 
+ height="10" width="200" opennewwindow="yes" nofollow="yes"]\n\n&nbsp\;\n\n
+  Regulamentul spectatorului
+ATTACH;FMTTYPE=image/jpeg:https://www.tntm.ro/wp-content/uploads/2024/12/a
+ bsurdinia.jpeg
+CATEGORIES:+12 ani
+LOCATION:Studio "UTU Strugari"\, Mărășești 2\, et.V\, Timișoara\, 3000
+ 86\, Romania
+GEO:45.755069;21.22571300000004
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=Mărășești 2\, et.V\, Ti
+ mișoara\, 300086\, Romania;X-APPLE-RADIUS=100;X-TITLE=Studio \"UTU Struga
+ ri\":geo:45.755069,21.22571300000004
+END:VEVENT
+BEGIN:VEVENT
+UID:1469@tntm.ro
+DTSTART:20261201T170000Z
+DTEND:20261201T170000Z
+DTSTAMP:20261121T070403Z
+URL:https://www.tntm.ro/programul-lunii/amintiri-din-epoca-de-scoala-42/
+SUMMARY:AMINTIRI DIN EPOCA DE ȘCOALĂ - Studio "UTU Strugari" - 1 dec. 26 
+ 19:00
+DESCRIPTION:durata spectacolului: 1h 5\n\nAMINTIRI DIN EPOCA DE ȘCOALĂ\n\
+ n Regulamentul spectatorului
+CATEGORIES:+12 ani
+LOCATION:Studio "UTU Strugari"\, Mărășești 2\, et.V\, Timișoara\, 3000
+ 86\, Romania
+GEO:45.755069;21.22571300000004
+END:VEVENT
+BEGIN:VEVENT
+UID:1458@tntm.ro
+DTSTART:20261206T160000Z
+DTEND:20261206T160000Z
+DTSTAMP:20261013T104322Z
+URL:https://www.tntm.ro/programul-lunii/anna-karenina-12/
+SUMMARY:ANNA KARENINA - Sala Mare - 6 dec. 26 18:00
+DESCRIPTION:ANNA KARENINA\n\n Regulamentul spectatorului
+CATEGORIES:+15 ani
+LOCATION:Sala Mare\, Mărăşeşti 2\, Timisoara\, 300086\, Romania
+GEO:45.756068;21.225809
+END:VEVENT
+BEGIN:VEVENT
+UID:1460@tntm.ro
+DTSTART:20261220T090000Z
+DTEND:20261220T090000Z
+DTSTAMP:20261103T114316Z
+URL:https://www.tntm.ro/programul-lunii/pinocchio-4/
+SUMMARY:PINOCCHIO - Sala Mare - 20 dec. 26 11:00
+DESCRIPTION: PINOCCHIO\n\n Regulamentul spectatorului
+CATEGORIES:pt.copii
+LOCATION:Sala Mare\, Mărăşeşti 2\, Timisoara\, 300086\, Romania
+GEO:45.756068;21.225809
+END:VEVENT
+END:VCALENDAR
