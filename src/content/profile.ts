@@ -3,8 +3,8 @@
  */
 export const profile = {
   /** Apare în bara de navigare și în titlul paginilor. */
-  siteName: "numele-tau.dev",
-  name: "Numele Tău",
+  siteName: "ianovici.catalin",
+  name: "Ianovici Catalin-Valentin",
   role: "Inginer și dezvoltator",
   domains: ["Software", "Embedded", "IoT", "AI"],
   headline: ["Construiesc sisteme", "care simt, decid", "și automatizează."],
@@ -21,9 +21,9 @@ export const profile = {
     "Web & Cloud": ["React", "Next.js", "Node.js", "Docker"],
     "IoT & Date": ["MQTT", "Home Assistant", "PostgreSQL", "PyTorch"],
   } as Record<string, string[]>,
-  email: "email@exemplu.ro",
+  email: "cata45513@gmail.com",
   links: [
-    { label: "GitHub", href: "https://github.com/" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/" },
+    { label: "GitHub", href: "https://github.com/IanoviciCatalin" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/ianovici-catalin-valentin-189459282/" },
   ],
 };

@@ -14,8 +14,8 @@ export default function Home() {
       <Hero />
       <Categories />
       <section id="proiecte" className="container-x flex scroll-mt-20 flex-col gap-10 border-t border-line pt-24">
-        <SectionHeading eyebrow="Proiecte principale" title="Sisteme construite cap-coadă.">
-          De la firmware și hardware până la aplicația cu care le folosești. Interacționează cu modelele: aprinde camerele, verifică pinii.
+        <SectionHeading eyebrow="Proiecte principale" title="De la circuit la aplicație.">
+          Proiecte la care am lucrat pe toate nivelurile: hardware, firmware și aplicația care le controlează. Încearcă modelele: aprinde luminile din casă sau vezi ce face fiecare pin al plăcii.
         </SectionHeading>
         <div className="flex flex-col gap-6">
           {featured.map((p, i) => (
