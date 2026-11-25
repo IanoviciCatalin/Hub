@@ -3,7 +3,7 @@
  */
 export const profile = {
   /** Apare in bara de navigare si in titlul paginilor. */
-  siteName: "ianovici.catalin",
+  siteName: "ianovici.dev",
   name: "Ianovici Catalin-Valentin",
   role: "Inginer si dezvoltator",
   domains: ["Software", "Embedded", "IoT", "AI"],
