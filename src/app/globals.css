@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* Graphite: paleta aprobată în Etapa 1 */
+@theme {
+  --color-bg: #0b0d10;
+  --color-surface: #101318;
+  --color-raised: #151920;
+  --color-line: #1e232a;
+  --color-line-strong: #2a2f37;
+  --color-muted: #8a919c;
+  --color-fg: #e6e8ec;
+  --color-accent: #8ab4ff;
+  --color-accent-deep: #2c4a73;
+  --color-accent-ink: #101a28;
+  --color-warm: #ffd27a;
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: var(--font-sans);
+    min-height: 100dvh;
+  }
+  ::selection {
+    background: var(--color-accent-deep);
+    color: var(--color-fg);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: max(20px, env(safe-area-inset-left, 0px));
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    white-space: nowrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.7rem 1.25rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    border: 1px solid var(--color-line-strong);
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s var(--ease-out-soft);
+  }
+  .btn:hover { border-color: var(--color-muted); }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--color-fg);
+    color: var(--color-bg);
+    border-color: var(--color-fg);
+  }
+  .btn-primary:hover { background: #fff; border-color: #fff; }
+  .btn .arrow { transition: transform 0.25s var(--ease-out-soft); }
+  .btn:hover .arrow { transform: translateX(3px); }
+}
+
+/* ---------- Animații (toate oprite la prefers-reduced-motion) ---------- */
+@keyframes line-in {
+  from { opacity: 0; transform: translateY(0.6em); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.line-in {
+  animation: line-in 0.7s var(--ease-out-soft) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+}
+.page-in { animation: page-in 0.45s var(--ease-out-soft) both; }
+
+/* Apariție la scroll: conținutul e vizibil implicit; se ascunde doar când JS a pornit. */
+.js [data-reveal]:not(.is-in) { opacity: 0; transform: translateY(16px); }
+[data-reveal] { transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .line-in, .page-in { animation: none; }
+  .js [data-reveal]:not(.is-in) { opacity: 1; transform: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
