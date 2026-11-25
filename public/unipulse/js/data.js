@@ -9,20 +9,112 @@ const CITIES = {
 };
 
 const CATEGORIES = {
-  // Carieră & învățare
-  hackathon:   { label: 'Hackathon',            icon: '💻', color: '#7c3aed', group: 'edu' },
-  workshop:    { label: 'Workshop',             icon: '🛠️', color: '#2563eb', group: 'edu' },
-  conferinta:  { label: 'Conferință',           icon: '🎤', color: '#0891b2', group: 'edu' },
-  cariera:     { label: 'Carieră & Internship', icon: '💼', color: '#0d9488', group: 'edu' },
-  curs:        { label: 'Curs & Training',      icon: '📚', color: '#475569', group: 'edu' },
-  concurs:     { label: 'Concurs',              icon: '🏆', color: '#d97706', group: 'edu' },
-  // Social & timp liber
-  meetup:      { label: 'Meetup & Echipe',      icon: '🤝', color: '#db2777', group: 'social' },
-  sport:       { label: 'Sport',                icon: '⚽', color: '#16a34a', group: 'social' },
-  cultura:     { label: 'Cultură',              icon: '🎭', color: '#be123c', group: 'social' },
-  social:      { label: 'Distracție',           icon: '🎳', color: '#ea580c', group: 'social' },
-  voluntariat: { label: 'Voluntariat',          icon: '🌱', color: '#65a30d', group: 'social' },
+  hackathon:   { label: 'Hackathon',            icon: '💻' },
+  workshop:    { label: 'Workshop',             icon: '🛠️' },
+  conferinta:  { label: 'Conferință',           icon: '🎤' },
+  cariera:     { label: 'Carieră & Internship', icon: '💼' },
+  curs:        { label: 'Curs & Training',      icon: '📚' },
+  concurs:     { label: 'Concurs',              icon: '🏆' },
+  meetup:      { label: 'Meetup & Echipe',      icon: '🤝' },
+  sport:       { label: 'Sport',                icon: '⚽' },
+  cultura:     { label: 'Cultură',              icon: '🎭' },
+  social:      { label: 'Distracție',           icon: '🎳' },
+  voluntariat: { label: 'Voluntariat',          icon: '🌱' },
 };
+
+// Categoriile afișate. Tipul original rămâne util pentru căutare și pentru datele salvate.
+const EVENT_GROUPS = {
+  cultura:     { label: 'Film & cultură', icon: '🎬', color: '#62596F', types: ['cultura'] },
+  social:      { label: 'Muzică & ieșiri', icon: '🎵', color: '#805C50', types: ['social', 'meetup'] },
+  sport:       { label: 'Sport & jocuri', icon: '⚽', color: '#456558', types: ['sport', 'concurs'] },
+  workshop:    { label: 'Învățare & carieră', icon: '📚', color: '#4C6377', types: ['workshop', 'hackathon', 'conferinta', 'cariera', 'curs'] },
+  voluntariat: { label: 'Comunitate & voluntariat', icon: '🌱', color: '#746440', types: ['voluntariat'] },
+};
+
+const TYPE_GROUPS = Object.fromEntries(Object.entries(EVENT_GROUPS).flatMap(([group, { types }]) =>
+  types.map(type => [type, group])
+));
+
+function eventGroup(event) {
+  if (event.community || event.userCreated) return TYPE_GROUPS[event.category];
+  const icon = eventIcon(event);
+  if (event.category === 'cultura' && icon === '🎵') return 'social';
+  if (event.category === 'social' && ['🎳', '🎲', '♟️', '🃏', '🧩', '🎮'].includes(icon)) return 'sport';
+  if (event.category === 'concurs' && ['💻', '🤖', '🔬'].includes(icon)) return 'workshop';
+  return TYPE_GROUPS[event.category];
+}
+
+/* Pictograma unui eveniment, după ce conține (titlu și etichete, apoi descriere).
+   Regulile specifice sunt înaintea celor generale. Fiecare termen începe la margine de cuvânt
+   (\b), ca „prototipare” să nu fie „tipar”, „cartier” să nu fie „carti”, iar „marketing” să nu fie „market”. */
+const EVENT_ICON_RULES = [
+  ['💻', /\bhackat?hon|\bhackaton/],
+  ['🎳', /\bbowling|\bpopice/],
+  ['⚽', /\bfotbal|\bfootball|\bsoccer|\bfutsal/],
+  ['🏀', /\bbaschet|\bbasketball|\bstreetball/],
+  ['🏐', /\bvolei|\bvolleyball/],
+  ['🏓', /\btenis de masa|\bping.?pong/],
+  ['🎾', /\btenis\b|\btennis|\bpadel/],
+  ['🤾', /\bhandbal/],
+  ['🏊', /\binot\b|\bnatatie|\bpiscin|\bswim/],
+  ['🚴', /\bciclism|\bbicicl|\bbike|\bcycling/],
+  ['🏃', /\balergare|\bmaraton|\bsemimaraton|\bcros\b|\brunning|\b5k\b|\b10k\b/],
+  ['⛸️', /\bpatinaj|\bpatinoar|\bskating/],
+  ['⛷️', /\bschi\b|\bski\b|\bsnowboard/],
+  ['🧗', /\bescalad|\bcatarare|\bclimbing/],
+  ['🧘', /\byoga|\bmeditati/],
+  ['🏋️', /\bfitness|\bgym\b|\bsala de forta|\bcrossfit/],
+  ['♟️', /\bsah\b|\bchess/],
+  ['🎮', /\be-?sports?\b|\bgaming|\bjocuri video|\blan party/],
+  ['🎲', /\bboard ?games?|\bjocuri de societate/],
+  ['🍽️', /\btasting|\bdegustar|\bfood tour|\bgastronom|\bculinar|\bmancare|\bstreet food|\bbucatar/],
+  ['🍕', /\bpizza/],
+  ['☕', /\bcafea|\bcoffee|\bcafenea/],
+  ['🍷', /\bvinuri|\bwine|\bvin (rosu|alb|fiert)/],
+  ['🍺', /\bbere\b|\bbeer|\bcraft beer/],
+  ['🎄', /\bcraciun|\bchristmas|\bmos nicolae/],
+  ['🎻', /\bopera\b|\bfilarmonic|\bsimfonic|\borchestr|\brecital/],
+  ['🎸', /\bconcert|\bfestival de muzica|\brock\b|\blive music/],
+  ['🎤', /\bkaraoke|\bstand.?up\b|\bopen mic/],
+  ['🎬', /\bfilm|\bcinema|\bproiecti(e|i)/],
+  ['🎭', /\bteatru|\bspectacol|\bpiesa\b|\bimprov/],
+  ['💃', /\bdans|\bdance|\bsalsa|\bbachata/],
+  ['📷', /\bfotograf|\bphoto/],
+  ['💎', /\bmineral|\bgeolog|\bfosil|\bcristal/],
+  ['📖', /\btipar|\bcarte\b|\bcarti\b|\blectur|\bbibliotec|\bliteratur|\bpoezi/],
+  ['🖼️', /\bexpozit|\bgaleri|\barta\b|\bart\b|\bvernisaj|\bmuzeu/],
+  ['🔬', /\bstiint|\blaborator|\bcercetare|\bscience/],
+  ['🤖', /\brobot/],
+  ['🔐', /\bsecuritate|\bcyber|\bctf\b/],
+  ['📊', /\bdata\b|\banalytics|\bstatistic/],
+  ['🔌', /\belectronic|\barduino|\bhardware|\biot\b/],
+  ['💻', /\bprogramare|\bcoding|\bcod\b|\bsoftware|\btech|\btehnolog|\bai\b|\binteligenta artificiala|\bmachine learning|\bdeveloper|\bweb\b|\baplicati|\bprototip/],
+  ['🚀', /\bstartup|\bantreprenor|\bpitch|\bincubator|\baccelerator/],
+  ['🎨', /\bdesign|\bgrafic|\bilustrati|\bpictur/],
+  ['🩺', /\bmedicin|\bsanatate|\bprim ajutor|\bdonare de sange/],
+  ['🌳', /\becolog|\bplantare|\bnatura\b|\bmediu\b|\breciclare/],
+  ['🌱', /\bvoluntar|\bcaritate|\bong\b/],
+  ['💼', /\bcariera|\bjob|\binternship|\bangajar|\brecrutare|\bstagiu/],
+  ['🏆', /\bgala\b|\bpremii|\bconcurs|\bcompetiti|\bolimpiad/],
+  ['🎓', /\beducati|\buniversitat|\babsolvent|\bstudentesc/],
+  ['🎤', /\bconferint|\bforum|\bsummit|\btalk|\bspeaker|\bpanel/],
+  ['🛠️', /\bworkshop|\batelier/],
+  ['📚', /\bcurs\b|\bcursuri|\btraining|\bbootcamp|\bseminar/],
+  ['🛍️', /\btarg|\bbazar|\bmarket\b/],
+  ['🎉', /\bpetrecere|\bparty|\bchef\b|\bdistracti/],
+  ['🤝', /\bnetworking|\bmeetup|\bsocializ|\bcunoaste/],
+];
+function eventIcon(e) {
+  if (e.catalogIcon) return e.catalogIcon;
+  const norm = (s) => String(s ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const head = norm([e.title, ...(e.tags || [])].join(' · '));
+  const body = norm(e.description);
+  for (const text of [head, body]) {
+    const rule = EVENT_ICON_RULES.find(([, pattern]) => pattern.test(text));
+    if (rule) return rule[0];
+  }
+  return CATEGORIES[e.category]?.icon || '📍';
+}
 
 const VENUES = {
   upt:     { name: 'Universitatea Politehnica – Rectorat', address: 'Piața Victoriei 2', lat: 45.75370, lng: 21.22520 },
@@ -46,8 +138,16 @@ const VENUES = {
   uvtPlatani: { name: 'Galeria cu Platani – Art Center UVT', address: 'Campusul UVT', lat: 45.74720, lng: 21.23097 },
 };
 
-const TOPICS = ['AI', 'Programare', 'Data', 'Securitate', 'Design', 'Startup', 'Business', 'Inginerie',
-  'Robotică', 'Medicină', 'Soft skills', 'Muzică', 'Artă', 'Fotbal', 'Socializare', 'Ecologie'];
+const LEARNING_TYPES = ['hackathon', 'workshop', 'conferinta', 'cariera', 'curs', 'concurs'];
+const TOPIC_TYPES = {
+  AI: LEARNING_TYPES, Programare: LEARNING_TYPES, Data: LEARNING_TYPES, Securitate: LEARNING_TYPES,
+  Design: [...LEARNING_TYPES, 'cultura'], Startup: [...LEARNING_TYPES, 'meetup'],
+  Business: [...LEARNING_TYPES, 'meetup'], Inginerie: LEARNING_TYPES, Robotică: LEARNING_TYPES,
+  Medicină: ['workshop', 'conferinta', 'cariera', 'curs', 'concurs', 'voluntariat'],
+  'Soft skills': ['workshop', 'conferinta', 'cariera', 'curs', 'meetup', 'voluntariat'],
+  Muzică: ['cultura', 'social'], Artă: ['cultura', 'workshop'], Fotbal: ['sport'],
+  Socializare: ['meetup', 'social', 'sport', 'voluntariat'], Ecologie: ['voluntariat', 'workshop', 'conferinta'],
+};
 
 const FACULTIES = {
   timisoara: ['UPT – Automatică și Calculatoare', 'UPT – Electronică și Telecomunicații', 'UPT – Mecanică',

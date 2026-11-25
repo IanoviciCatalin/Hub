@@ -3,13 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- noindex rămâne cât timp UniPulse e exclus din verificarea AdSense (tests/adsense.test.mjs). -->
   <meta name="robots" content="noindex,follow" />
   <title>UniPulse – evenimente pentru studenți</title>
-  <meta name="description" content="Harta 3D cu evenimentele pentru studenți: hackathoane, cariere, workshopuri, meetup-uri, sport și cultură." />
-  <meta name="theme-color" content="#6d28d9" />
+  <meta name="description" content="Harta 3D cu evenimentele pentru studenți din Timișoara, Cluj, București și Iași: hackathoane, cariere, workshopuri, sport și cultură. Participă și vorbește cu ceilalți participanți." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ianovici.dev" />
+  <meta property="og:locale" content="ro_RO" />
+  <meta property="og:title" content="UniPulse – evenimente pentru studenți" />
+  <meta property="og:description" content="Vezi pe hartă ce se întâmplă în campus, participă și vorbește cu ceilalți participanți." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#f7f8f6" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" href="icons/icon-192.png" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -20,6 +28,7 @@
   <link href="css/style.css" rel="stylesheet" />
 </head>
 <body>
+  <h1 class="sr-only">UniPulse – harta evenimentelor pentru studenți</h1>
   <div id="map"></div>
   <div id="map-error" class="map-error hidden">
     <strong>Harta nu s-a putut încărca.</strong>
@@ -29,95 +38,125 @@
   <!-- Bara de sus -->
   <header class="topbar glass">
     <div class="brand">
-      <a class="logo" href="/" aria-label="Inapoi la ianovici.dev">U</a>
+      <a class="logo" href="/" aria-label="Inapoi la ianovici.dev"><img src="icons/logo-96.png" width="40" height="40" alt="" /></a>
       <div class="brand-text">
         <div class="brand-name">UniPulse</div>
         <div class="brand-sub">evenimente pentru studenți</div>
       </div>
     </div>
-    <button class="city-pill" id="btn-city" title="Schimbă orașul">📍 <span id="city-name">Timișoara</span> <span class="caret">▾</span></button>
+    <button class="city-pill" id="btn-city" title="Schimbă orașul"><span class="city-pin" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5.5-8 10-8 10s-8-4.5-8-10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg></span> <span id="city-name">Timișoara</span> <span class="caret">▾</span></button>
+    <button type="button" id="show-all-events" class="all-events" aria-pressed="true">Toate evenimentele <span id="all-events-count"></span></button>
     <div class="topbar-actions">
-      <span class="calendar-badge">Calendar local</span>
-      <button class="btn ghost" id="btn-organizer">＋ <span class="lbl">Adaugă eveniment</span></button>
-      <button class="icon-btn" id="btn-prefs" title="Preferințe" aria-label="Preferințe">⚙️</button>
-      <button class="btn primary" id="btn-login"><span class="ico">👤</span><span class="lbl">Intră în cont</span></button>
+      <button type="button" class="btn ghost" id="btn-organizer">＋ <span class="lbl">Creează eveniment</span></button>
+      <button class="icon-btn" id="btn-prefs" title="Preferințe" aria-label="Preferințe"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.5" fill="var(--control-bg)"/><circle cx="15" cy="17" r="2.5" fill="var(--control-bg)"/></svg></button>
+      <button class="btn primary" id="btn-login" aria-label="Intră în cont"><span class="ico" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></span><span class="lbl">Intră în cont</span></button>
+      <button class="icon-btn hidden" id="btn-account" title="Contul meu" aria-label="Contul meu"></button>
     </div>
   </header>
 
   <!-- Panoul principal (pe mobil devine bottom sheet) -->
   <aside class="panel glass" id="panel">
     <button type="button" class="sheet-handle" id="sheet-handle" aria-label="Schimbă înălțimea panoului"><span></span></button>
+    <button type="button" class="panel-close" id="panel-close" aria-label="Ascunde panoul" title="Ascunde panoul">×</button>
 
-    <nav class="tabs">
-      <button class="tab active" data-tab="explore">🧭 Explorează</button>
-      <button class="tab" data-tab="teams">🤝 Echipe</button>
-      <button class="tab" data-tab="saved">❤️ Salvate <span class="tab-count hidden" id="saved-count">0</span></button>
+    <nav class="tabs" aria-label="Secțiuni UniPulse">
+      <button class="tab active" data-tab="explore" aria-current="true"><svg class="ui-icon tab-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z"/></svg> Explorează</button>
+      <button class="tab" data-tab="teams"><svg class="ui-icon tab-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m20 0v-2a4 4 0 0 0-3-3.9M16 3.2a4 4 0 0 1 0 7.6"/><circle cx="9" cy="7" r="4"/></svg> Echipe</button>
+      <button class="tab" data-tab="messages"><svg class="ui-icon tab-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a7.5 7.5 0 0 1-7.5 7.5H8l-5 2 1.8-4.5A7.5 7.5 0 0 1 10.5 4h3a7.5 7.5 0 0 1 7.5 7.5Z"/></svg> Mesaje</button>
+      <button class="tab" data-tab="saved"><svg class="ui-icon tab-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.8a5.2 5.2 0 0 0-7.4 0L12 7.2l-1.4-1.4a5.2 5.2 0 0 0-7.4 7.4L12 22l8.8-8.8a5.2 5.2 0 0 0 0-7.4Z"/></svg> Salvate <span class="tab-count hidden" id="saved-count">0</span></button>
+      <button class="tab" data-tab="campus"><svg class="ui-icon tab-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m2 10 10-5 10 5-10 5-10-5Zm4 2v5c3.6 2.7 8.4 2.7 12 0v-5m4-2v6"/></svg> Sala mea</button>
     </nav>
-    <div class="event-scope" role="group" aria-label="Ce evenimente vezi">
-      <button type="button" id="show-all-events" class="all-events" aria-pressed="true">Toate evenimentele <span id="all-events-count"></span></button>
-      <button type="button" id="show-personal-events" class="personal-events" aria-pressed="false">Pentru tine</button>
-    </div>
-
-    <div class="install-banner hidden" id="install-banner">
-      <span>📲 Instalează UniPulse pe telefon</span>
-      <button class="btn primary small" id="install-go">Instalează</button>
-      <button class="install-x" id="install-x" aria-label="Închide">✕</button>
-    </div>
+    <button type="button" id="mobile-search" class="mobile-search"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg> Caută evenimente</button>
 
     <!-- Explorează -->
     <section class="tab-body" id="tab-explore">
-      <p class="muted small calendar-note">Selecție din surse oficiale · verificată la <time id="calendar-verified" datetime="2026-11-20">20 noiembrie 2026</time>.</p>
       <form class="ai-search" id="ai-search" autocomplete="off">
-        <span class="spark">✨</span>
-        <input id="q" type="search" enterkeyhint="search" placeholder="Ex: hackathon gratuit weekendul ăsta cu AI" />
+        <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+        <input id="q" type="search" enterkeyhint="search" aria-label="Caută evenimente" placeholder="Ex: sport gratuit în weekend" />
         <button type="button" class="clear-q hidden" id="clear-q" aria-label="Șterge căutarea">✕</button>
       </form>
       <div class="ai-understood hidden" id="ai-understood"></div>
 
-      <details class="filter-panel">
-        <summary>Filtrează după perioadă sau categorie <span id="filter-count"></span></summary>
-        <div class="filters">
-        <div class="when-row" id="when-row">
-          <button class="pill active" data-when="all">Oricând</button>
-          <button class="pill" data-when="today">Azi</button>
-          <button class="pill" data-when="weekend">Weekend</button>
-          <button class="pill" data-when="week">7 zile</button>
-          <button class="pill" data-when="month">30 zile</button>
-          <label class="pill toggle"><input type="checkbox" id="free-only" /> Gratuit</label>
-        </div>
-        <div class="cat-group-label">Carieră & învățare</div>
-        <div class="chips" id="chips-edu"></div>
-        <div class="cat-group-label">Social & timp liber</div>
-        <div class="chips" id="chips-social"></div>
-        </div>
-      </details>
+      <div class="explore-controls">
+        <details class="filter-panel">
+          <summary>Filtre <span id="filter-count"></span></summary>
+          <div class="filters">
+            <div class="when-row" id="when-row">
+              <button class="pill active" data-when="all">Oricând</button>
+              <button class="pill" data-when="today">Azi</button>
+              <button class="pill" data-when="weekend">Weekend</button>
+              <button class="pill" data-when="week">7 zile</button>
+              <button class="pill" data-when="month">30 zile</button>
+              <label class="pill toggle"><input type="checkbox" id="free-only" /> Gratuit</label>
+            </div>
+            <div class="cat-group-label" id="event-origin-label">Proveniență</div>
+            <div class="origin-row" id="origin-row" role="group" aria-labelledby="event-origin-label">
+              <button type="button" class="pill active" data-origin="all" aria-pressed="true">Toate</button>
+              <button type="button" class="pill" data-origin="official" aria-pressed="false">Oficiale</button>
+              <button type="button" class="pill" data-origin="community" aria-pressed="false">Comunitate</button>
+            </div>
+            <div class="cat-group-label" id="event-categories-label">Categorii</div>
+            <div class="chips" id="category-chips" role="group" aria-labelledby="event-categories-label"></div>
+          </div>
+        </details>
+        <button type="button" id="show-personal-events" class="personal-events" aria-pressed="false">Pentru tine</button>
+      </div>
 
       <div id="for-you" class="for-you hidden">
         <div class="section-title">
-          <span>⭐ Recomandate pentru tine</span>
+          <span>Recomandări</span>
           <button class="link-btn" id="edit-interests">Editează interesele</button>
         </div>
         <div id="for-you-list" class="for-you-list"></div>
       </div>
 
       <div class="section-title list-head">
-        <span id="result-count" role="status">Evenimente</span>
+        <h2 id="result-count" class="list-title" role="status">Evenimente</h2>
+        <button type="button" class="btn ghost small" id="btn-create-inline">＋ Creează</button>
       </div>
       <div class="event-list" id="event-list"></div>
       <p class="muted small"><a id="organizer-calendar" target="_blank" rel="noopener">Agenda organizatorilor ↗</a></p>
+      <div class="install-banner hidden" id="install-banner">
+        <span>📲 Instalează UniPulse pe telefon</span>
+        <button class="btn primary small" id="install-go">Instalează</button>
+        <button class="install-x" id="install-x" aria-label="Închide">✕</button>
+      </div>
     </section>
 
     <!-- Echipe -->
     <section class="tab-body hidden" id="tab-teams">
-      <p class="muted small">Găsește coechipieri pentru un hackathon sau concurs, ori organizează o ieșire: bowling, meci, operă, orice.</p>
+      <p class="muted small">Alătură-te unei echipe sau caută coechipieri pentru un eveniment.</p>
       <div class="team-actions">
-        <button class="btn primary" id="btn-new-team">🔎 Caut echipă</button>
-        <button class="btn ghost" id="btn-new-meetup">🎉 Organizează o ieșire</button>
+        <button type="button" class="btn primary" id="btn-new-team">＋ Creează echipă</button>
       </div>
       <div class="section-title"><span>Echipe care caută membri</span></div>
       <div id="team-list"></div>
-      <div class="section-title"><span>Ieșiri și meetup-uri</span></div>
-      <div class="event-list" id="meetup-list"></div>
+    </section>
+
+    <!-- Ghid campus: găsește sala -->
+    <section class="tab-body hidden" id="tab-campus">
+      <p class="muted small cn-intro">Caută o sală sau un laborator la <b>Mecanică</b> și <b>Automatică și Calculatoare</b> (UPT).</p>
+      <form class="ai-search cn-search" id="cn-form" autocomplete="off">
+        <span class="spark">🎓</span>
+        <input id="cn-q" type="search" enterkeyhint="go" placeholder="Ex: B419 sau Aurel Bărglăzan" aria-label="Codul sălii sau numele laboratorului" />
+        <button class="btn primary small" type="submit">Caută</button>
+      </form>
+      <div class="cn-examples" id="cn-examples"></div>
+      <div id="cn-result" aria-live="polite"></div>
+
+      <div class="section-title"><span>📅 Orarul meu</span><button type="button" class="link-btn" id="cn-add">＋ Adaugă oră</button></div>
+      <div id="cn-next"></div>
+      <div id="cn-orar"></div>
+      <p class="muted small cn-foot">
+        <button type="button" class="link-btn" id="cn-parity">Setează săptămâna pară/impară</button><br />
+        Orarul oficial: <a href="https://mec.upt.ro/orare-2/" target="_blank" rel="noopener">Mecanică ↗</a> · <a href="https://ac.upt.ro/orare/" target="_blank" rel="noopener">Automatică și Calculatoare ↗</a>.
+        Orele tale rămân doar în acest browser. Panorame: <a href="https://visit360.upt.ro/" target="_blank" rel="noopener">turul virtual UPT ↗</a>. Clădiri și intrări: © OpenStreetMap.
+      </p>
+    </section>
+
+    <section class="tab-body hidden" id="tab-messages">
+      <p class="muted small">Discuțiile evenimentelor la care participi. Se deblochează după ce apeși „Particip”.</p>
+      <div id="room-list"></div>
     </section>
 
     <!-- Salvate -->
@@ -128,11 +167,17 @@
 
   <!-- Controale hartă -->
   <div class="map-tools glass">
-    <button id="btn-3d" class="tool" title="Vedere 3D / 2D" aria-pressed="false">2D</button>
-    <button id="btn-locate" class="tool" title="Lângă mine">◎</button>
-    <button id="btn-tour" class="tool" title="Tur 3D al orașului">⟳</button>
-    <button id="btn-home" class="tool" title="Centrează pe oraș">⌂</button>
+    <button id="btn-map-options" class="tool map-options-toggle" type="button" aria-label="Opțiuni hartă" title="Opțiuni hartă" aria-expanded="false" aria-controls="map-style-tools"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5m-18 4 9 5 9-5"/></svg></button>
+    <div id="map-style-tools" class="map-style-tools">
+      <button id="btn-3d" class="tool" type="button" title="Vedere 3D / 2D" aria-label="Vedere 3D" aria-pressed="false"><span id="map-view-label">2D</span><span class="map-option-label">Vedere 3D</span></button>
+      <button id="btn-night" class="tool" type="button" title="Mod de noapte" aria-label="Mod de noapte" aria-pressed="false"><span class="theme-moon"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.9 13.2A8.5 8.5 0 0 1 10.8 3.1a8.5 8.5 0 1 0 10.1 10.1Z"/></svg></span><span class="theme-sun"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></span><span class="map-option-label">Mod de noapte</span></button>
+      <button id="btn-tour" class="tool" type="button" title="Tur 3D al orașului" aria-label="Tur 3D al orașului"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 6.7M20 5v6h-6"/></svg><span class="map-option-label">Turul orașului</span></button>
+      <button id="btn-home" class="tool" type="button" title="Centrează pe oraș" aria-label="Centrează pe oraș"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7m-16 0v9h14v-9m-9 9v-5h4v5"/></svg><span class="map-option-label">Centrează pe oraș</span></button>
+    </div>
+    <button id="btn-locate" class="tool" type="button" title="Lângă mine" aria-label="Lângă mine"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg></button>
   </div>
+
+  <button type="button" class="btn panel-open glass hidden" id="panel-open" aria-controls="panel" aria-expanded="false">☰ Arată panoul</button>
 
   <!-- Detalii eveniment / locație -->
   <aside class="detail glass hidden" id="detail">
@@ -156,6 +201,11 @@
 
   <script src="js/data.js"></script>
   <script src="js/events.js"></script>
+  <script src="js/events-timisoara.js"></script>
+  <script src="js/cathedral.js"></script>
+  <script src="js/social.js"></script>
   <script src="js/app.js"></script>
-</body>
+  <script src="js/campus-data.js"></script>
+  <script src="js/campus-nav.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a6010a211efde0c5',t:'MTc5NTYxMzc1Nw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a6010a211efde0c5',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

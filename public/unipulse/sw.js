@@ -1,15 +1,21 @@
 const CACHE_PREFIX = 'unipulse-';
-const CACHE = CACHE_PREFIX + 'v5';
+const CACHE = CACHE_PREFIX + 'v21';
 const ROOT = self.registration.scope;
 const SHELL = new Set([
   './',
   './css/style.css',
   './js/data.js',
   './js/events.js',
+  './js/events-timisoara.js',
+  './js/cathedral.js',
+  './js/social.js',
   './js/app.js',
+  './js/campus-data.js',
+  './js/campus-nav.js',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/logo-96.png',
+  './icons/favicon-48.png',
+  './icons/icon-192.png'
 ].map(path => new URL(path, ROOT).href));
 
 self.addEventListener('install', event => {
