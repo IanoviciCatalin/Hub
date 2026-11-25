@@ -35,6 +35,33 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "unipulse",
+    title: "UniPulse",
+    category: "software",
+    summary: "Aplicatie web care aduna intr-un singur loc evenimentele pentru studenti, cu lista, filtre si harta 2D/3D a orasului.",
+    description:
+      "Aplicatie web construita intr-un weekend. Evenimentele pentru studenti (hackathoane, cariere, workshopuri, sport, cultura) sunt imprastiate pe zeci de site-uri. UniPulse le aduna intr-o lista cu filtre si le arata pe harta, pentru Timisoara, Cluj-Napoca, Bucuresti si Iasi.",
+    status: "done",
+    tech: ["JavaScript", "HTML", "CSS", "MapLibre GL", "PWA"],
+    featured: true,
+    links: { demo: "/unipulse/" },
+    gallery: [{ src: "/projects/unipulse/preview.png", alt: "Ecranul principal UniPulse cu lista de evenimente" }],
+    sections: [
+      {
+        title: "Ce face",
+        body: "Lista de evenimente apare prima, cu filtre pe oras si categorie, iar harta 2D/3D ruleaza in fundal. Fiecare eveniment are link spre sursa oficiala si traseu in Google Maps. Evenimentele expirate dispar automat.",
+      },
+      {
+        title: "Validare",
+        body: "Am testat aplicatia cu 20 de studenti: 17 au spus ca ar folosi-o sau ar recomanda-o.",
+      },
+      {
+        title: "Tehnic",
+        body: "HTML, CSS si JavaScript, fara framework si fara pas de build. Harta foloseste MapLibre GL si OpenFreeMap. Aplicatia se poate instala pe telefon (PWA), iar lista si salvarile functioneaza si fara internet dupa prima incarcare.",
+      },
+    ],
+  },
+  {
     slug: "import-rapoarte-productie",
     title: "Import automat de rapoarte de productie",
     category: "ai-data",

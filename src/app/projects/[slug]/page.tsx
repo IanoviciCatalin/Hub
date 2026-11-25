@@ -26,7 +26,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const next = projects[(idx + 1) % projects.length];
   const links = [
     project.links?.github && { label: "Cod pe GitHub", href: project.links.github },
-    project.links?.demo && { label: "Demo live", href: project.links.demo },
+    project.links?.demo && { label: "Deschide aplicatia", href: project.links.demo },
     project.links?.site && { label: "Website-ul proiectului", href: project.links.site },
   ].filter(Boolean) as { label: string; href: string }[];
 

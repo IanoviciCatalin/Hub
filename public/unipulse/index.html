@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex,follow" />
+  <title>UniPulse – evenimente pentru studenți</title>
+  <meta name="description" content="Harta 3D cu evenimentele pentru studenți: hackathoane, cariere, workshopuri, meetup-uri, sport și cultură." />
+  <meta name="theme-color" content="#6d28d9" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="UniPulse" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://unpkg.com" crossorigin />
+  <link href="css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="map"></div>
+  <div id="map-error" class="map-error hidden">
+    <strong>Harta nu s-a putut încărca.</strong>
+    <span>Verifică conexiunea la internet și reîncarcă pagina.</span>
+  </div>
+
+  <!-- Bara de sus -->
+  <header class="topbar glass">
+    <div class="brand">
+      <a class="logo" href="https://ducaneseriosul.online/" aria-label="Înapoi la DucaNeseriosul">U</a>
+      <div class="brand-text">
+        <div class="brand-name">UniPulse</div>
+        <div class="brand-sub">evenimente pentru studenți</div>
+      </div>
+    </div>
+    <button class="city-pill" id="btn-city" title="Schimbă orașul">📍 <span id="city-name">Timișoara</span> <span class="caret">▾</span></button>
+    <div class="topbar-actions">
+      <span class="calendar-badge">Calendar local</span>
+      <button class="btn ghost" id="btn-organizer">＋ <span class="lbl">Adaugă eveniment</span></button>
+      <button class="icon-btn" id="btn-prefs" title="Preferințe" aria-label="Preferințe">⚙️</button>
+      <button class="btn primary" id="btn-login"><span class="ico">👤</span><span class="lbl">Intră în cont</span></button>
+    </div>
+  </header>
+
+  <!-- Panoul principal (pe mobil devine bottom sheet) -->
+  <aside class="panel glass" id="panel">
+    <button type="button" class="sheet-handle" id="sheet-handle" aria-label="Schimbă înălțimea panoului"><span></span></button>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="explore">🧭 Explorează</button>
+      <button class="tab" data-tab="teams">🤝 Echipe</button>
+      <button class="tab" data-tab="saved">❤️ Salvate <span class="tab-count hidden" id="saved-count">0</span></button>
+    </nav>
+    <div class="event-scope" role="group" aria-label="Ce evenimente vezi">
+      <button type="button" id="show-all-events" class="all-events" aria-pressed="true">Toate evenimentele <span id="all-events-count"></span></button>
+      <button type="button" id="show-personal-events" class="personal-events" aria-pressed="false">Pentru tine</button>
+    </div>
+
+    <div class="install-banner hidden" id="install-banner">
+      <span>📲 Instalează UniPulse pe telefon</span>
+      <button class="btn primary small" id="install-go">Instalează</button>
+      <button class="install-x" id="install-x" aria-label="Închide">✕</button>
+    </div>
+
+    <!-- Explorează -->
+    <section class="tab-body" id="tab-explore">
+      <p class="muted small calendar-note">Selecție din surse oficiale · verificată la <time id="calendar-verified" datetime="2026-11-20">20 noiembrie 2026</time>.</p>
+      <form class="ai-search" id="ai-search" autocomplete="off">
+        <span class="spark">✨</span>
+        <input id="q" type="search" enterkeyhint="search" placeholder="Ex: hackathon gratuit weekendul ăsta cu AI" />
+        <button type="button" class="clear-q hidden" id="clear-q" aria-label="Șterge căutarea">✕</button>
+      </form>
+      <div class="ai-understood hidden" id="ai-understood"></div>
+
+      <details class="filter-panel">
+        <summary>Filtrează după perioadă sau categorie <span id="filter-count"></span></summary>
+        <div class="filters">
+        <div class="when-row" id="when-row">
+          <button class="pill active" data-when="all">Oricând</button>
+          <button class="pill" data-when="today">Azi</button>
+          <button class="pill" data-when="weekend">Weekend</button>
+          <button class="pill" data-when="week">7 zile</button>
+          <button class="pill" data-when="month">30 zile</button>
+          <label class="pill toggle"><input type="checkbox" id="free-only" /> Gratuit</label>
+        </div>
+        <div class="cat-group-label">Carieră & învățare</div>
+        <div class="chips" id="chips-edu"></div>
+        <div class="cat-group-label">Social & timp liber</div>
+        <div class="chips" id="chips-social"></div>
+        </div>
+      </details>
+
+      <div id="for-you" class="for-you hidden">
+        <div class="section-title">
+          <span>⭐ Recomandate pentru tine</span>
+          <button class="link-btn" id="edit-interests">Editează interesele</button>
+        </div>
+        <div id="for-you-list" class="for-you-list"></div>
+      </div>
+
+      <div class="section-title list-head">
+        <span id="result-count" role="status">Evenimente</span>
+      </div>
+      <div class="event-list" id="event-list"></div>
+      <p class="muted small"><a id="organizer-calendar" target="_blank" rel="noopener">Agenda organizatorilor ↗</a></p>
+    </section>
+
+    <!-- Echipe -->
+    <section class="tab-body hidden" id="tab-teams">
+      <p class="muted small">Găsește coechipieri pentru un hackathon sau concurs, ori organizează o ieșire: bowling, meci, operă, orice.</p>
+      <div class="team-actions">
+        <button class="btn primary" id="btn-new-team">🔎 Caut echipă</button>
+        <button class="btn ghost" id="btn-new-meetup">🎉 Organizează o ieșire</button>
+      </div>
+      <div class="section-title"><span>Echipe care caută membri</span></div>
+      <div id="team-list"></div>
+      <div class="section-title"><span>Ieșiri și meetup-uri</span></div>
+      <div class="event-list" id="meetup-list"></div>
+    </section>
+
+    <!-- Salvate -->
+    <section class="tab-body hidden" id="tab-saved">
+      <div class="event-list" id="saved-list"></div>
+    </section>
+  </aside>
+
+  <!-- Controale hartă -->
+  <div class="map-tools glass">
+    <button id="btn-3d" class="tool" title="Vedere 3D / 2D" aria-pressed="false">2D</button>
+    <button id="btn-locate" class="tool" title="Lângă mine">◎</button>
+    <button id="btn-tour" class="tool" title="Tur 3D al orașului">⟳</button>
+    <button id="btn-home" class="tool" title="Centrează pe oraș">⌂</button>
+  </div>
+
+  <!-- Detalii eveniment / locație -->
+  <aside class="detail glass hidden" id="detail">
+    <button class="close" id="detail-close" aria-label="Închide">✕</button>
+    <div id="detail-body"></div>
+  </aside>
+
+  <div class="pick-banner hidden" id="pick-banner">
+    📍 Atinge harta unde va fi ieșirea
+    <button class="btn ghost small" id="pick-cancel">Anulează</button>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modal">
+    <div class="modal glass" role="dialog" aria-modal="true">
+      <button class="close" id="modal-close" aria-label="Închide">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

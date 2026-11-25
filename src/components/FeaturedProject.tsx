@@ -21,10 +21,15 @@ export function FeaturedProject({ project, flip = false }: { project: Project; f
         <h3 className="text-3xl font-medium tracking-[-0.03em] md:text-4xl">{project.title}</h3>
         <p className="max-w-[46ch] leading-relaxed text-muted">{project.summary}</p>
         <TechList tech={project.tech} />
-        <div>
-          <Link href={`/projects/${project.slug}/`} className="btn btn-primary mt-2">
+        <div className="mt-2 flex flex-wrap gap-3">
+          <Link href={`/projects/${project.slug}/`} className="btn btn-primary">
             Exploreaza proiectul <span className="arrow" aria-hidden="true">→</span>
           </Link>
+          {project.links?.demo && (
+            <a href={project.links.demo} target="_blank" rel="noreferrer" className="btn">
+              Deschide aplicatia <span aria-hidden="true">↗</span>
+            </a>
+          )}
         </div>
       </div>
       <div className={flip ? "md:order-1" : ""}>
