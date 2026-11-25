@@ -15,7 +15,7 @@ export default function Home() {
       <Categories />
       <section id="proiecte" className="container-x flex scroll-mt-20 flex-col gap-10 border-t border-line pt-24">
         <SectionHeading eyebrow="Proiecte principale" title="De la circuit la aplicație.">
-          Proiecte la care am lucrat pe toate nivelurile: hardware, firmware și aplicația care le controlează. Încearcă modelele: aprinde luminile din casă sau vezi ce face fiecare pin al plăcii.
+          Proiecte la care am lucrat pe toate nivelurile, de la date și hardware până la aplicația care le folosește. Încearcă modelul casei: aprinde luminile din fiecare cameră.
         </SectionHeading>
         <div className="flex flex-col gap-6">
           {featured.map((p, i) => (

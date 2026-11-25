@@ -33,7 +33,9 @@ export function ProjectExplorer({ projects }: { projects: Project[] }) {
 
   const options: { id: Filter; label: string; count: number }[] = [
     { id: "all", label: "Toate", count: projects.length },
-    ...categories.map((c) => ({ id: c.id as Filter, label: c.label, count: projects.filter((p) => p.category === c.id).length })),
+    ...categories
+      .map((c) => ({ id: c.id as Filter, label: c.label, count: projects.filter((p) => p.category === c.id).length }))
+      .filter((o) => o.count > 0),
   ];
   const list = filter === "all" ? projects : projects.filter((p) => p.category === filter);
 
@@ -64,12 +66,12 @@ export function ProjectExplorer({ projects }: { projects: Project[] }) {
           <li key={p.slug} className="page-in border-t border-line last:border-b" style={{ animationDelay: `${i * 50}ms` }}>
             <Link
               href={`/projects/${p.slug}/`}
-              className="group grid grid-cols-1 items-center gap-3 py-6 transition-colors sm:grid-cols-[1fr_auto] md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_300px] md:gap-8"
+              className="group grid grid-cols-1 items-center gap-3 py-6 transition-colors sm:grid-cols-[1fr_auto] md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_380px] md:gap-8"
             >
               <div className="flex min-w-0 flex-col gap-1.5">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="font-mono text-xs text-muted">{categoryLabel(p.category)}</span>
-                  <span className="font-mono text-xs text-muted tabular-nums">{p.year}</span>
+                  {p.year && <span className="font-mono text-xs text-muted tabular-nums">{p.year}</span>}
                   {p.example && <ExampleBadge />}
                 </div>
                 <h3 className="text-xl font-medium tracking-[-0.02em] transition-colors group-hover:text-accent">{p.title}</h3>

@@ -16,10 +16,10 @@ export const profile = {
     "Al doilea paragraf poate spune cum lucrezi: de la prototip pe breadboard până la produs care rulează zilnic.",
   ],
   skills: {
-    Limbaje: ["TypeScript", "Python", "C / C++"],
-    Embedded: ["ESP32", "STM32", "FreeRTOS", "I²C / SPI / UART"],
-    "Web & Cloud": ["React", "Next.js", "Node.js", "Docker"],
-    "IoT & Date": ["MQTT", "Home Assistant", "PostgreSQL", "PyTorch"],
+    Limbaje: ["C#", "Java", "C", "SQL", "TypeScript"],
+    "Backend & date": [".NET", "Spring Boot", "JPA / JDBC", "PostgreSQL", "MySQL"],
+    "Automatizare": ["Import și procesare Excel", "ETL", "View-uri SQL pentru raportare"],
+    "Interese": ["Embedded", "IoT", "Home Automation", "AI"],
   } as Record<string, string[]>,
   email: "cata45513@gmail.com",
   links: [

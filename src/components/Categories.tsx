@@ -7,7 +7,7 @@ export function Categories() {
   const lead = projects.find((p) => p.featured);
   return (
     <section id="categorii" className="container-x scroll-mt-20 pb-16" aria-label="Categorii de proiecte">
-      <ul className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+      <ul className="grid grid-cols-2 gap-3 lg:grid-flow-col lg:auto-cols-fr lg:grid-cols-none">
         {lead && (
           <li className="col-span-2 lg:col-span-1">
             <Link
@@ -22,6 +22,7 @@ export function Categories() {
         )}
         {categories.map((c) => {
           const n = projects.filter((p) => p.category === c.id).length;
+          if (n === 0) return null;
           return (
             <li key={c.id}>
               <Link

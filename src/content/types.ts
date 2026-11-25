@@ -3,7 +3,7 @@ export type CategoryId = "software" | "automation-iot" | "embedded" | "ai-data";
 export type ProjectStatus = "planned" | "in-progress" | "done";
 
 /** Obiectul 3D afișat pentru proiect. "none" = doar imaginea de preview. */
-export type ProjectModel = "house" | "board" | "none";
+export type ProjectModel = "house" | "board" | "pipeline" | "none";
 
 export interface ProjectSection {
   title: string;
@@ -27,7 +27,8 @@ export interface Project {
   summary: string;
   /** Paragraful de deschidere al paginii de detaliu. */
   description: string;
-  year: number;
+  /** Anul proiectului. Opțional: dacă lipsește, nu se afișează. */
+  year?: number;
   status: ProjectStatus;
   tech: string[];
   /** Proiectele "featured" primesc cardul mare cu obiect 3D pe pagina principală. */

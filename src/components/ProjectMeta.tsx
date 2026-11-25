@@ -14,7 +14,7 @@ export function StatusDot({ status }: { status: Project["status"] }) {
 export function TechList({ tech, max }: { tech: string[]; max?: number }) {
   const shown = max ? tech.slice(0, max) : tech;
   return (
-    <ul className="flex flex-wrap gap-1.5" aria-label="Tehnologii">
+    <ul className={`flex gap-1.5 ${max ? "flex-nowrap" : "flex-wrap"}`} aria-label="Tehnologii">
       {shown.map((t) => (
         <li key={t} className="chip">
           {t}

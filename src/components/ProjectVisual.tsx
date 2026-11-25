@@ -2,11 +2,13 @@ import type { Project } from "@/content/types";
 import { categoryLabel } from "@/content/categories";
 import { HouseInteractive } from "./HouseInteractive";
 import { BoardInteractive } from "./BoardInteractive";
+import { PipelineIllustration } from "./PipelineIllustration";
 
 /** Alege vizualul unui proiect: scena 3D, prima imagine din galerie sau un preview generat. */
 export function ProjectVisual({ project, compact = false }: { project: Project; compact?: boolean }) {
   if (project.model === "house") return <HouseInteractive compact={compact} />;
   if (project.model === "board") return <BoardInteractive compact={compact} />;
+  if (project.model === "pipeline") return <PipelineIllustration className="aspect-[5/4] w-full" />;
   const cover = project.gallery?.find((g) => g.kind !== "video");
   if (cover)
     // eslint-disable-next-line @next/next/no-img-element

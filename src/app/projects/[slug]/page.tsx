@@ -47,7 +47,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <div className="line-in flex flex-wrap items-center gap-3" style={{ "--i": 0 } as React.CSSProperties}>
             <span className="eyebrow">{categoryLabel(project.category)}</span>
             <StatusDot status={project.status} />
-            <span className="font-mono text-xs text-muted tabular-nums">{project.year}</span>
+            {project.year && <span className="font-mono text-xs text-muted tabular-nums">{project.year}</span>}
             {project.example && <ExampleBadge />}
           </div>
           <h1 className="line-in text-[clamp(2.4rem,6vw,4.2rem)] font-medium leading-[1.03] tracking-[-0.035em]" style={{ "--i": 1 } as React.CSSProperties}>
