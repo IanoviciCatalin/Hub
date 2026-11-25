@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "unipulse-api",
+  "main": "server/index.mjs",
+  "compatibility_date": "2026-10-30",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    // Emailurile conturilor care vad panoul /unipulse/admin/ (separate prin virgula).
+    "UNIPULSE_ADMINS": "cata45513@gmail.com",
+    // Origini suplimentare acceptate pentru cereri POST (de ex. un domeniu nou).
+    "UNIPULSE_ORIGINS": "https://ianovici.dev"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "UNIPULSE_HUB", "class_name": "UniPulseHub" }]
+  },
+  "migrations": [{ "tag": "unipulse-v1", "new_sqlite_classes": ["UniPulseHub"] }],
+  "d1_databases": [
+    {
+      "database_name": "unipulse",
+      "binding": "DB",
+      // Se completeaza dupa `npx wrangler d1 create unipulse`.
+      "database_id": "REPLACE_WITH_D1_ID"
+    }
+  ]
+}

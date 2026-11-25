@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Administrare UniPulse</title>
+  <link rel="icon" type="image/png" sizes="48x48" href="../icons/favicon-48.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="admin.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="adm-top">
+    <a class="adm-brand" href="../"><img src="../icons/logo-96.png" width="36" height="36" alt="" /><span>UniPulse <b>Admin</b></span></a>
+    <span id="adm-who" class="adm-who"></span>
+  </header>
+
+  <main id="adm-main" class="adm-main" aria-busy="true">
+    <h1 class="sr-only">Administrare UniPulse</h1>
+    <p id="adm-status" class="adm-status" role="status">Se verifică accesul…</p>
+
+    <div id="adm-app" hidden>
+      <section aria-labelledby="adm-stats-h">
+        <h2 id="adm-stats-h">Pe scurt</h2>
+        <div id="adm-stats" class="adm-stats"></div>
+      </section>
+
+      <nav class="adm-tabs" role="tablist" aria-label="Secțiuni">
+        <button type="button" role="tab" data-tab="accounts" aria-selected="true">Conturi</button>
+        <button type="button" role="tab" data-tab="events" aria-selected="false">Evenimente</button>
+        <button type="button" role="tab" data-tab="teams" aria-selected="false">Echipe</button>
+        <button type="button" role="tab" data-tab="messages" aria-selected="false">Mesaje raportate</button>
+      </nav>
+
+      <section id="tab-accounts" class="adm-tab" role="tabpanel" aria-label="Conturi">
+        <form id="adm-search" class="adm-search" role="search">
+          <label for="adm-q" class="sr-only">Caută după nume sau email</label>
+          <input id="adm-q" type="search" placeholder="Caută după nume sau email" />
+          <button class="adm-btn" type="submit">Caută</button>
+        </form>
+        <div id="adm-accounts"></div>
+      </section>
+      <section id="tab-events" class="adm-tab" role="tabpanel" aria-label="Evenimente" hidden><div id="adm-events"></div></section>
+      <section id="tab-teams" class="adm-tab" role="tabpanel" aria-label="Echipe" hidden><div id="adm-teams"></div></section>
+      <section id="tab-messages" class="adm-tab" role="tabpanel" aria-label="Mesaje raportate" hidden><div id="adm-messages"></div></section>
+    </div>
+  </main>
+
+  <dialog id="adm-dialog" class="adm-dialog" aria-labelledby="adm-dialog-title">
+    <form method="dialog">
+      <h2 id="adm-dialog-title"></h2>
+      <div id="adm-dialog-body"></div>
+      <div class="adm-dialog-actions">
+        <button class="adm-btn ghost" value="cancel" id="adm-dialog-cancel">Renunță</button>
+        <button class="adm-btn" value="ok" id="adm-dialog-ok">Confirmă</button>
+      </div>
+    </form>
+  </dialog>
+  <div id="adm-toast" class="adm-toast" role="status" hidden></div>
+
+  <script src="../js/social.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
