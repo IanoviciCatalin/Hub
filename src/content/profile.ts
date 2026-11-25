@@ -12,8 +12,8 @@ export const profile = {
   headlineMutedLine: 1,
   intro: "Inginer și dezvoltator. Aici sunt proiectele mele, de la firmware până la aplicații.",
   about: [
-    "Scrie aici două-trei fraze despre tine: ce studiezi sau unde lucrezi, ce tip de probleme îți place să rezolvi și ce construiești acum.",
-    "Al doilea paragraf poate spune cum lucrezi: de la prototip pe breadboard până la produs care rulează zilnic.",
+    "Sunt in anul 4 la Automatica si Calculatoare, la UPT, si studiez Ingineria Sistemelor. Imi place sa fac aplicatii care rezolva probleme reale. De obicei, ideile imi vin cand vad cat timp pierde cineva facand aceiasi pasi de fiecare data.",
+    "Atunci ma intreb \u201eoare pot sa automatizez asta?\u201d si incep sa incerc. Asta imi place cel mai mult la programare: sa vad ca ceva facut de mine chiar ii usureaza cuiva munca.",
   ],
   skills: {
     Limbaje: ["C#", "Java", "C", "SQL", "TypeScript"],
