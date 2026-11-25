@@ -3,7 +3,10 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "out",
-  "trailingSlash": true,
+  "redirects": [
+    { "source": "/unipulse", "destination": "/unipulse/", "permanent": true },
+    { "source": "/unipulse/admin", "destination": "/unipulse/admin/", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/api/unipulse/:path*",
