@@ -20,7 +20,7 @@
       "database_name": "unipulse",
       "binding": "DB",
       // Se completeaza dupa `npx wrangler d1 create unipulse`.
-      "database_id": "REPLACE_WITH_D1_ID"
+      "database_id": "6a849a3a-0a5f-44cd-83b1-d77ddb14b2df"
     }
   ]
 }

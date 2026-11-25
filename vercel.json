@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api/unipulse/:path*",
+      "destination": "https://unipulse-api.unipulse-api.workers.dev/api/unipulse/:path*"
+    }
+  ]
+}
