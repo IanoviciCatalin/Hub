@@ -9,7 +9,14 @@ import { RevealObserver } from "@/components/RevealObserver";
 const geist = Geist({ subsets: ["latin", "latin-ext"], variable: "--font-geist", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-geist-mono", display: "swap" });
 
+// adresa publica, folosita pentru imaginea din previzualizari (WhatsApp, Instagram etc.)
+// Cand domeniul ianovici.dev va fi activ, se schimba aici.
+const siteUrl = "https://site-hub-beige.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  openGraph: { type: "website", siteName: profile.siteName },
+  twitter: { card: "summary_large_image" },
   title: { default: `${profile.name} · ${profile.role}`, template: `%s · ${profile.siteName}` },
   description: profile.intro,
 };
