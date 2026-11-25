@@ -35,10 +35,10 @@ tabele noi în Durable Object). Importul nu atinge participările, discuțiile s
 - Evenimentele încheiate ies singure din catalog; după 6 ore sunt arhivate, iar după 30 de zile
   se șterg definitiv doar dacă nimeni nu a participat, scris sau făcut echipă.
 - Worker separat `unipulse-ingest` (`wrangler.ingest.jsonc`, `ingest/index.mjs`) pentru rulările
-  programate. Este oprit: `INGEST_ENABLED=false` și fără cron. Pornirea se face doar după aprobare:
+  programate: descoperire la 6 ore, întreținere zilnică. Oprire de urgență: `INGEST_ENABLED`
+  "false" în ambele fișiere wrangler, sau sursa oprită din admin. Publicare:
 
       npx wrangler deploy                      # API-ul (tabelele noi se creează singure)
-      # în wrangler.ingest.jsonc: INGEST_ENABLED "true" și crons ["0 */6 * * *", "30 2 * * *"]
-      npm run deploy:ingest
+      npm run deploy:ingest                    # worker-ul cu cron
 
 Teste: `npm test` (date demonstrative în `tests/fixtures/tntm.ics`, fără rețea).

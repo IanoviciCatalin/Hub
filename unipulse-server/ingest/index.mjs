@@ -3,7 +3,7 @@
 // Siguranțe: INGEST_ENABLED trebuie să fie "true", iar fiecare sursă are propriul comutator în admin.
 import { runAll } from '../server/ingest/runner.mjs';
 
-// Programul propus (se activează în wrangler.ingest.jsonc doar după aprobarea pentru producție):
+// Programul (din wrangler.ingest.jsonc):
 //   "0 */6 * * *"  descoperire + actualizare pentru toate sursele active
 //   "30 2 * * *"   întreținere: arhivarea evenimentelor încheiate și curățarea arhivei vechi
 export const JOBS = { '0 */6 * * *': 'discover', '30 2 * * *': 'maintenance' };
