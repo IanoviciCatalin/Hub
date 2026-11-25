@@ -6,7 +6,7 @@ import { UniPulseStore, STORE_METHODS } from './unipulse-store.mjs';
 export class UniPulseHub extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
-    this.store = new UniPulseStore(ctx.storage.sql);
+    this.store = new UniPulseStore(ctx.storage.sql, { transaction: (fn) => ctx.storage.transactionSync(fn) });
   }
 }
 for (const name of STORE_METHODS) {

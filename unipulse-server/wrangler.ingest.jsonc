@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Worker separat pentru importul automat de evenimente. NU este publicat încă:
+  // deploy-ul și pornirea cron-ului cer aprobarea separată pentru producție.
+  "name": "unipulse-ingest",
+  "main": "ingest/index.mjs",
+  "compatibility_date": "2026-10-30",
+  "workers_dev": false,
+  "preview_urls": false,
+  "vars": {
+    // Comutatorul global. Rămâne "false" până la aprobare; cu "false" cron-ul nu face nimic.
+    "INGEST_ENABLED": "false",
+    "INGEST_USER_AGENT": "UniPulseEventImport/1.0 (+https://site-hub-beige.vercel.app/unipulse/)"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "UNIPULSE_HUB", "class_name": "UniPulseHub", "script_name": "unipulse-api" }]
+  },
+  // Programul propus, de activat după aprobare: ["0 */6 * * *", "30 2 * * *"]
+  "triggers": { "crons": [] }
+}

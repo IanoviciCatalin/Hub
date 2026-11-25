@@ -100,6 +100,82 @@
         </tr>`)) : empty('Niciun mesaj raportat.');
   }
 
+  // ---------- Import automat ----------
+  let imports = null;
+  const KIND = { new: 'Eveniment nou', invalid: 'Date incomplete', possible_duplicate: 'Posibil duplicat', removed: 'Dispărut din sursă' };
+  const ACTION = {
+    approve: ['Publică', ''], reject: ['Respinge', 'ghost danger'], dismiss: ['Am văzut', 'ghost'],
+    link: ['E același eveniment', ''], separate: ['Sunt diferite', 'ghost'], hide: ['Ascunde', 'ghost danger'], keep: ['Păstrează', 'ghost'],
+  };
+  const SOURCE_STATE = { ok: ['ok', 'Funcționează'], degraded: ['warn', 'Erori repetate'], blocked: ['bad', 'Blocată de sursă'] };
+  const EVENT_STATUS = { scheduled: '', cancelled: 'Anulat', postponed: 'Amânat', rescheduled: 'Reprogramat', removed_at_source: 'Scos de la sursă' };
+  const link = (url, text) => (url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(text || url)}</a>` : esc(text || ''));
+
+  function renderImport() {
+    const d = imports;
+    const note = $('#adm-import-note');
+    note.classList.toggle('ok', d.ingestEnabled);
+    note.textContent = d.ingestEnabled
+      ? 'Importul automat este pornit. Sursele active rulează programat; evenimentele noi apar aici înainte de publicare, dacă sursa nu e în modul automat.'
+      : 'Importul real este oprit până la aprobarea pentru producție. Poți rula simulări: citesc sursa și arată ce s-ar importa, fără să scrie nimic.';
+    $('#adm-import-sources').innerHTML = d.sources.length ? table(['Sursă', 'Stare', 'Ultima rulare', 'Publicate', 'De verificat', 'Mod', 'Acțiuni'], d.sources.map((s) => {
+      const [tone, label] = SOURCE_STATE[s.state] || ['', s.state];
+      return `<tr>
+        <td>${link(s.url, s.name)}<span class="adm-sub">${esc(s.terms || '')}</span></td>
+        <td><span class="adm-tag ${s.enabled ? tone : ''}">${s.enabled ? label : 'Oprită'}</span>${s.lastError ? `<span class="adm-sub">${esc(s.lastError)}</span>` : ''}</td>
+        <td>${date(s.lastRunAt)}${s.lastSuccessAt && s.lastSuccessAt !== s.lastRunAt ? `<span class="adm-sub">ultima reușită ${date(s.lastSuccessAt)}</span>` : ''}</td>
+        <td>${s.published}${s.linked ? `<span class="adm-sub">${s.linked} legate de alte surse</span>` : ''}</td>
+        <td>${s.pending ? `<span class="adm-tag warn">${s.pending}</span>` : '0'}</td>
+        <td><label class="sr-only" for="mode-${esc(s.id)}">Mod de publicare</label>
+          <select class="adm-select" id="mode-${esc(s.id)}" data-source-mode="${esc(s.id)}">
+            <option value="review"${s.publishMode === 'review' ? ' selected' : ''}>Cu verificare</option>
+            <option value="auto"${s.publishMode === 'auto' ? ' selected' : ''}>Automat</option>
+          </select></td>
+        <td class="adm-actions">
+          <button type="button" class="adm-btn small ghost" data-source-run="${esc(s.id)}" data-dry="1"${s.manualRunAllowed ? '' : ' disabled title="O rulare la 10 minute"'}>Simulează</button>
+          ${d.ingestEnabled ? `<button type="button" class="adm-btn small" data-source-run="${esc(s.id)}" data-dry="0"${s.manualRunAllowed && s.enabled ? '' : ' disabled'}>Rulează acum</button>` : ''}
+          <button type="button" class="adm-btn small ${s.enabled ? 'ghost danger' : ''}" data-source-toggle="${esc(s.id)}" data-enabled="${s.enabled ? 0 : 1}">${s.enabled ? 'Oprește' : 'Pornește'}</button>
+        </td>
+      </tr>`;
+    })) : empty('Nicio sursă configurată.');
+    $('#adm-import-review').innerHTML = d.review.length ? table(['Propunere', 'Motiv', 'Când', 'Unde', 'Acțiuni'], d.review.map((r) => `
+      <tr>
+        <td><span class="adm-tag ${r.kind === 'new' ? 'ok' : 'warn'}">${KIND[r.kind] || esc(r.kind)}</span>
+          <div>${link(r.candidate.url, r.candidate.title || '(fără titlu)')}</div>
+          ${r.match ? `<span class="adm-sub">Seamănă cu: ${link(r.match.url, r.match.title)} · ${esc(r.match.source)} · ${date(r.match.startAt)}</span>` : ''}</td>
+        <td>${esc(r.reason || (r.kind === 'new' ? 'Sursă cu verificare' : ''))}</td>
+        <td>${date(r.candidate.startAt)}</td>
+        <td>${esc(r.candidate.locationName || '')}${Number.isFinite(r.candidate.lat) ? `<span class="adm-sub"><a href="https://www.openstreetmap.org/?mlat=${r.candidate.lat}&mlon=${r.candidate.lng}#map=18/${r.candidate.lat}/${r.candidate.lng}" target="_blank" rel="noopener noreferrer">vezi pe hartă</a></span>` : '<span class="adm-sub">fără coordonate</span>'}</td>
+        <td class="adm-actions">${r.actions.map((a) => `<button type="button" class="adm-btn small ${ACTION[a][1]}" data-review="${r.id}" data-action="${a}">${ACTION[a][0]}</button>`).join('')}</td>
+      </tr>`)) : empty('Nimic de verificat.');
+    $('#adm-import-upcoming').innerHTML = d.upcoming.length ? table(['Eveniment', 'Sursă', 'Începe', 'Stare', 'Verificat', 'Acțiuni'], d.upcoming.map((e) => `
+      <tr>
+        <td>${link(e.url, e.title)}<span class="adm-sub"><code>${esc(e.eventId)}</code></span></td>
+        <td>${esc(e.source)}</td><td>${date(e.startAt)}</td>
+        <td><span class="adm-tag ${e.state === 'published' ? 'ok' : 'bad'}">${e.state === 'published' ? 'Publicat' : 'Ascuns'}</span>${EVENT_STATUS[e.status] ? ` <span class="adm-tag warn">${EVENT_STATUS[e.status]}</span>` : ''}</td>
+        <td>${date(e.lastChecked)}</td>
+        <td class="adm-actions"><button type="button" class="adm-btn small ghost${e.state === 'published' ? ' danger' : ''}" data-import-event="${esc(e.eventId)}" data-state="${e.state === 'published' ? 'hidden' : 'published'}">${e.state === 'published' ? 'Ascunde' : 'Publică din nou'}</button></td>
+      </tr>`)) : empty('Niciun eveniment importat încă.');
+    $('#adm-import-runs').innerHTML = d.runs.length ? table(['Sursă', 'Tip', 'Când', 'Rezultat', 'Găsite', 'Noi', 'Actualizate', 'Neschimbate', 'Respinse / duplicate'], d.runs.map((r) => `
+      <tr>
+        <td>${esc(r.sourceId)}</td><td>${esc(r.job)}${r.dryRun ? ' <span class="adm-tag">simulare</span>' : ''}</td><td>${date(r.startedAt)}</td>
+        <td><span class="adm-tag ${r.status === 'ok' ? 'ok' : 'bad'}">${r.status === 'ok' ? 'Reușită' : 'Eroare'}</span>${r.error ? `<span class="adm-sub">${esc(r.error)}</span>` : ''}</td>
+        <td>${r.fetched}</td><td>${r.created}</td><td>${r.updated}</td><td>${r.unchanged}</td><td>${r.rejected} / ${r.linked + r.queued}</td>
+      </tr>`)) : empty('Nicio rulare încă.');
+    const fmt = (field, value) => (value === null || value === undefined ? '—' : /_at$/.test(field) ? date(Number(value)) : esc(value));
+    $('#adm-import-changes').innerHTML = d.changes.length ? table(['Eveniment', 'Câmp', 'Înainte', 'Acum', 'Când'], d.changes.map((c) => `
+      <tr><td>${esc(c.title || c.eventId)}</td><td>${esc(c.field)}</td><td class="adm-msg">${fmt(c.field, c.oldValue)}</td><td class="adm-msg">${fmt(c.field, c.newValue)}</td><td>${date(c.at)}</td></tr>`)) : empty('Nicio modificare înregistrată.');
+  }
+
+  async function loadImport() {
+    try {
+      imports = await api.importOverview();
+      renderImport();
+    } catch (error) {
+      $('#adm-import-sources').innerHTML = empty(esc(error.message));
+    }
+  }
+
   async function load() {
     try {
       data = await api.overview(query);
@@ -119,18 +195,32 @@
     stats(data.stats);
     renderAccounts();
     renderModeration();
+    loadImport();
   }
 
   $$('[data-tab]').forEach((tab) => tab.addEventListener('click', () => {
     $$('[data-tab]').forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
     $$('.adm-tab').forEach((panel) => { panel.hidden = panel.id !== 'tab-' + tab.dataset.tab; });
   }));
+  document.addEventListener('change', async (event) => {
+    const select = event.target.closest('[data-source-mode]');
+    if (!select) return;
+    try {
+      await api.importSource(select.dataset.sourceMode, { publishMode: select.value });
+      toast(select.value === 'auto' ? 'Evenimentele valide se publică direct; duplicatele incerte rămân la verificat.' : 'Evenimentele noi așteaptă verificarea ta.');
+      await loadImport();
+    } catch (error) { toast(error.message); }
+  });
   $('#adm-search').addEventListener('submit', (event) => { event.preventDefault(); query = $('#adm-q').value.trim(); load(); });
 
   document.addEventListener('click', async (event) => {
     const account = event.target.closest('[data-account]');
     const moderation = event.target.closest('[data-kind]');
     const message = event.target.closest('[data-message]');
+    const run = event.target.closest('[data-source-run]');
+    const toggle = event.target.closest('[data-source-toggle]');
+    const review = event.target.closest('[data-review]');
+    const imported = event.target.closest('[data-import-event]');
     try {
       if (account) {
         const { action, label } = account.dataset;
@@ -167,6 +257,32 @@
         await api.message(message.dataset.message, message.dataset.action);
         toast(remove ? 'Mesajul a fost șters.' : 'Raportarea a fost respinsă.');
         await load();
+      } else if (run) {
+        const dry = run.dataset.dry === '1';
+        if (!dry && !(await ask({ title: 'Rulezi importul acum?', body: '<p>Sursa este citită, iar evenimentele noi intră în catalog (sau în lista de verificat, după modul sursei).</p>', ok: 'Rulează' }))) return;
+        run.disabled = true;
+        const result = await api.importRun(run.dataset.sourceRun, dry);
+        const c = result.counts || {};
+        await ask({
+          title: dry ? 'Rezultatul simulării' : 'Import terminat', info: true, ok: 'Închide',
+          body: `<p>${c.fetched ?? 0} găsite · ${c.created ?? 0} noi · ${c.updated ?? 0} actualizate · ${c.unchanged ?? 0} neschimbate · ${c.linked ?? 0} legate de alte surse · ${c.rejected ?? 0} cu date incomplete · ${c.skipped ?? 0} deja încheiate${c.missing ? ` · ${c.missing} lipsă din sursă` : ''}.</p>${dry ? '<p>Nu s-a scris nimic în catalog.</p>' : ''}`,
+        });
+        await loadImport();
+      } else if (toggle) {
+        const enable = toggle.dataset.enabled === '1';
+        await api.importSource(toggle.dataset.sourceToggle, { enabled: enable });
+        toast(enable ? 'Sursa a fost pornită.' : 'Sursa a fost oprită. Evenimentele deja publicate rămân.');
+        await loadImport();
+      } else if (review) {
+        const { action } = review.dataset;
+        if (['reject', 'hide'].includes(action) && !(await ask({ title: action === 'hide' ? 'Ascunzi evenimentul?' : 'Respingi propunerea?', body: '<p>Nu va apărea pe hartă. Participările și discuțiile existente rămân păstrate.</p>', ok: action === 'hide' ? 'Ascunde' : 'Respinge', danger: true }))) return;
+        await api.importReview(review.dataset.review, action);
+        toast({ approve: 'Publicat pe hartă.', reject: 'Respins.', link: 'Sursele au fost legate.', separate: 'Publicat ca eveniment separat.', hide: 'Ascuns.', keep: 'Păstrat.', dismiss: 'Gata.' }[action] || 'Gata.');
+        await loadImport();
+      } else if (imported) {
+        await api.importEvent(imported.dataset.importEvent, imported.dataset.state);
+        toast(imported.dataset.state === 'hidden' ? 'Evenimentul a fost ascuns.' : 'Evenimentul este din nou public.');
+        await loadImport();
       } else if (event.target.id === 'adm-copy') {
         await navigator.clipboard.writeText($('#adm-temp').textContent);
         event.target.textContent = 'Copiată';

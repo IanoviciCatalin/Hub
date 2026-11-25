@@ -1,6 +1,7 @@
 // Rutele /api/unipulse/*: conturi (D1), participări, chat, evenimente, echipe, sincronizare și admin (Durable Object).
 import { ChatError } from './unipulse-chat.mjs';
 import { Accounts, readToken } from './unipulse-accounts.mjs';
+import { runSource, sourceDefs } from './ingest/runner.mjs';
 
 const json = (data, status = 200, headers = {}) => Response.json(data, {
   status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers },
@@ -31,6 +32,9 @@ const EVENT = /^\/api\/unipulse\/event\/([a-z0-9][a-z0-9-]{2,79})(\/join|\/leave
 const TEAM = /^\/api\/unipulse\/team\/(t-[a-z0-9]{9})\/(join|leave|delete|report)$/;
 const ADMIN_ACCOUNT = /^\/api\/unipulse\/admin\/account\/([0-9a-f-]{36})\/(disable|enable|reset)$/;
 const ADMIN_STATUS = /^\/api\/unipulse\/admin\/(event|team)\/([a-z0-9-]{3,80})\/status$/;
+const IMPORT_SOURCE = /^\/api\/unipulse\/admin\/import\/source\/([a-z0-9-]{2,30})(\/run)?$/;
+const IMPORT_REVIEW = /^\/api\/unipulse\/admin\/import\/review\/(\d{1,12})$/;
+const IMPORT_EVENT = /^\/api\/unipulse\/admin\/import\/event\/(x-[a-z0-9-]{2,78})$/;
 const ADMIN_MESSAGE = /^\/api\/unipulse\/admin\/message\/(\d{1,12})\/(delete|dismiss)$/;
 
 // Serverul ruleaza in spatele site-ului (Vercel face proxy pentru /api/unipulse/*), deci originea
@@ -62,6 +66,10 @@ export async function unipulse(request, env, url) {
 
     const hub = env.UNIPULSE_HUB.getByName('main');
     const answer = (result, status = 200) => (result.error ? json({ error: result.error }, result.status || 400) : json(result.ok, status));
+    // Catalogul importat automat: public, doar citire.
+    if (path === '/api/unipulse/catalog' && method === 'GET') {
+      return answer(await hub.catalogList(String(url.searchParams.get('city') || '')));
+    }
     if (path === '/api/unipulse/counts' && method === 'GET') {
       return answer(await hub.counts(String(url.searchParams.get('ids') || '').split(',').slice(0, 60)));
     }
@@ -114,8 +122,31 @@ export async function unipulse(request, env, url) {
           stats: { ...overview.ok.stats, ...(await accounts.stats()) },
           accounts: await accounts.listAccounts(url.searchParams.get('q') || '') });
       }
+      if (path === '/api/unipulse/admin/import' && method === 'GET') {
+        const overview = await hub.importOverview(sourceDefs());
+        if (overview.error) return answer(overview);
+        return json({ ...overview.ok, ingestEnabled: env.INGEST_ENABLED === 'true' });
+      }
       if (method !== 'POST') return json({ error: 'NOT_FOUND' }, 404);
-      let match = path.match(ADMIN_ACCOUNT);
+      let match = path.match(IMPORT_SOURCE);
+      if (match) {
+        const body = await readBody(request);
+        if (!match[2]) return answer(await hub.importSetSource(match[1], { enabled: typeof body.enabled === 'boolean' ? body.enabled : undefined, publishMode: body.publishMode }));
+        // Rulare manuală: simularea doar citește sursa; importul real cere INGEST_ENABLED=true (aprobat separat).
+        const dryRun = body.dryRun !== false;
+        if (!dryRun && env.INGEST_ENABLED !== 'true') return json({ error: 'INGEST_DISABLED' }, 409);
+        const state = await hub.importSource(match[1], sourceDefs());
+        if (state.error) return answer(state);
+        if (!state.ok.manualRunAllowed) return json({ error: 'RUN_TOO_SOON' }, 429);
+        // Din admin așteptăm cel mult 3 s între reîncercări, ca pagina să primească repede răspunsul.
+        const result = await runSource(hub, match[1], { job: 'manual', dryRun, userAgent: env.INGEST_USER_AGENT, wait: (ms) => new Promise((r) => setTimeout(r, Math.min(ms, 3000))) });
+        return json(result, result.status === 'ok' ? 200 : result.status === 'error' ? 502 : 400);
+      }
+      match = path.match(IMPORT_REVIEW);
+      if (match) return answer(await hub.importDecide(match[1], String((await readBody(request)).action || ''), { email: admin.email, name: admin.name }));
+      match = path.match(IMPORT_EVENT);
+      if (match) return answer(await hub.importSetPublish(match[1], String((await readBody(request)).state || '')));
+      match = path.match(ADMIN_ACCOUNT);
       if (match) {
         const [, id, action] = match;
         return json(action === 'reset' ? await accounts.resetPassword(id) : await accounts.setDisabled(id, action === 'disable', admin));

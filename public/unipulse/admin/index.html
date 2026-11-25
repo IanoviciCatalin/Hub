@@ -30,6 +30,7 @@
         <button type="button" role="tab" data-tab="events" aria-selected="false">Evenimente</button>
         <button type="button" role="tab" data-tab="teams" aria-selected="false">Echipe</button>
         <button type="button" role="tab" data-tab="messages" aria-selected="false">Mesaje raportate</button>
+        <button type="button" role="tab" data-tab="import" aria-selected="false">Import automat</button>
       </nav>
 
       <section id="tab-accounts" class="adm-tab" role="tabpanel" aria-label="Conturi">
@@ -43,6 +44,19 @@
       <section id="tab-events" class="adm-tab" role="tabpanel" aria-label="Evenimente" hidden><div id="adm-events"></div></section>
       <section id="tab-teams" class="adm-tab" role="tabpanel" aria-label="Echipe" hidden><div id="adm-teams"></div></section>
       <section id="tab-messages" class="adm-tab" role="tabpanel" aria-label="Mesaje raportate" hidden><div id="adm-messages"></div></section>
+      <section id="tab-import" class="adm-tab" role="tabpanel" aria-label="Import automat" hidden>
+        <p id="adm-import-note" class="adm-note"></p>
+        <h3>Surse</h3>
+        <div id="adm-import-sources"></div>
+        <h3>De verificat înainte de publicare</h3>
+        <div id="adm-import-review"></div>
+        <h3>Evenimente importate, viitoare</h3>
+        <div id="adm-import-upcoming"></div>
+        <h3>Ultimele rulări</h3>
+        <div id="adm-import-runs"></div>
+        <h3>Modificări importante</h3>
+        <div id="adm-import-changes"></div>
+      </section>
     </div>
   </main>
 

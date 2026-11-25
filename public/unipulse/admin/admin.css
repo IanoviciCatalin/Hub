@@ -69,3 +69,11 @@ a { color: var(--accent); }
   .adm-actions .adm-btn { margin: 0 0 6px; display: block; width: 100%; }
   .adm-actions .adm-btn + .adm-btn { margin-left: 0; }
 }
+
+/* Import automat */
+#tab-import h3 { font-size: 14px; margin: 22px 0 8px; }
+#tab-import h3:first-of-type { margin-top: 8px; }
+.adm-note { margin: 0 0 6px; padding: 12px 14px; border-radius: 12px; background: var(--warn-bg); color: var(--warn); font-size: 13.5px; line-height: 1.5; }
+.adm-note.ok { background: var(--ok-bg); color: var(--ok); }
+.adm-sub { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; overflow-wrap: anywhere; }
+.adm-select { padding: 6px 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; }

@@ -92,10 +92,36 @@
 
   // Evenimentele comunității vin de pe server, pe oraș. userEvents sunt ieșirile vechi, salvate doar local.
   const communityEvents = new Map(); // oraș → evenimente
+  // Evenimentele importate automat din surse oficiale (catalogul de pe server), pe oraș.
+  const catalogEvents = new Map(); // oraș → evenimente
+  // Linkuri comparabile: același anunț poate apărea cu „www.”, slash final sau parametri utm.
+  function sameLink(value) {
+    try {
+      const url = new URL(value);
+      for (const key of [...url.searchParams.keys()]) if (/^utm_|^fbclid$/i.test(key)) url.searchParams.delete(key);
+      return url.hostname.toLowerCase().replace(/^www\./, '') + url.pathname.replace(/\/+$/, '') + url.search;
+    } catch {
+      return '';
+    }
+  }
+  // Un eveniment importat care există deja în selecția statică (același link oficial) păstrează ID-ul static,
+  // ca participanții și discuția să rămână legate de el; datele vin din import, fiind mai noi.
+  function officialEvents() {
+    const imported = [...catalogEvents.values()].flat();
+    const byLink = new Map(imported.filter((e) => e.url).map((e) => [sameLink(e.url), e]));
+    const used = new Set();
+    const merged = EVENTS.map((event) => {
+      const twin = event.url && byLink.get(sameLink(event.url));
+      if (!twin) return event;
+      used.add(twin.id);
+      return { ...event, ...twin, id: event.id, venue: undefined, featured: event.featured };
+    });
+    return [...merged, ...imported.filter((e) => !used.has(e.id))];
+  }
   let allEvents = [];
   function rebuildEvents() {
     allEvents = [
-      ...EVENTS.map((event) => hydrate(event, 'official')),
+      ...officialEvents().map((event) => hydrate(event, 'official')),
       ...[...communityEvents.values()].flat().map((event) => hydrate(event, 'community')),
       ...userEvents.map((event) => hydrate(event, 'community')),
     ]
@@ -849,6 +875,7 @@
     goToCity(true);
     toast(`📍 Acum vezi evenimentele din ${city().name}`);
     loadCommunityEvents(key);
+    loadCatalogEvents(key);
     loadTeams(key);
   }
 
@@ -929,7 +956,7 @@
           <div class="ev-meta">${esc(whenText(e))}</div>
           <div class="ev-meta">📍 ${esc(e.venueName)}${dist ? ` · <b>${dist}</b>` : ''}</div>
           <div class="ev-badges">
-            ${status ? `<span class="badge today">${status}</span>` : ''}
+            ${e.eventStatus === 'cancelled' ? '<span class="badge today">Anulat</span>' : e.eventStatus === 'postponed' ? '<span class="badge today">Amânat</span>' : status ? `<span class="badge today">${status}</span>` : ''}
             <span class="badge ${e.soldOut ? 'today' : isFree(e) ? 'free' : ''}">${priceText(e)}</span>
             ${opts.interestMatch ? '<span class="badge interest-badge">Din interesele tale</span>' : ''}
             ${opts.showCat ? `<span class="badge cat">${c.label}</span>` : ''}
@@ -1098,7 +1125,10 @@
     const me = social.currentAccount();
     const going = !!info?.joined;
     const n = goingCount(e.id);
-    join.innerHTML = `<button type="button" class="btn ${going ? 'going-btn' : 'primary'} block" data-rsvp="${esc(e.id)}" aria-pressed="${going}"${rsvpBusy ? ' disabled' : ''}>
+    // Un eveniment anulat nu mai primește participanți noi; cei înscriși își păstrează locul în discuție.
+    join.innerHTML = e.eventStatus === 'cancelled' && !going
+      ? '<p class="muted small">Evenimentul a fost anulat de organizator și nu mai primește participanți noi.</p>'
+      : `<button type="button" class="btn ${going ? 'going-btn' : 'primary'} block" data-rsvp="${esc(e.id)}" aria-pressed="${going}"${rsvpBusy ? ' disabled' : ''}>
       ${going ? '✓ Participi <span class="sub">· apasă ca să renunți</span>' : '<span aria-hidden="true">🙋</span> Particip'}</button>`;
     const names = info?.participants || [];
     people.innerHTML = `
@@ -1175,17 +1205,17 @@
         <div class="d-cat">${c.label}${e.featured ? ' · ⭐ Recomandat' : ''}</div>
         <h2>${esc(e.title)}</h2>
         <div class="d-org">${e.community ? `Organizat de ${esc(e.mine ? 'tine' : e.organizer)} <span class="verified">De la un student</span>`
-          : `${esc(e.organizer || 'Comunitatea UniPulse')}${e.source ? ' <span class="verified">Din agenda orașului</span>' : e.userCreated ? '' : ' <span class="verified">✓ Sursă oficială</span>'}`}</div>
+          : `${esc(e.organizer || 'Comunitatea UniPulse')}${e.imported ? ` <span class="verified">Preluat de pe ${esc(e.sourceName || 'site-ul organizatorului')}</span>` : e.source ? ' <span class="verified">Din agenda orașului</span>' : e.userCreated ? '' : ' <span class="verified">✓ Sursă oficială</span>'}`}</div>
       </div>
       <div class="d-body">
         <div class="d-facts">
-          <div class="fact"><div class="fi" aria-hidden="true">📆</div><div class="fv"><b>${esc(whenText(e))}</b>${status ? `<span>${status}</span>` : ''}</div></div>
+          <div class="fact"><div class="fi" aria-hidden="true">📆</div><div class="fv"><b>${esc(whenText(e))}</b>${e.eventStatus === 'cancelled' ? '<span>Anulat de organizator</span>' : e.eventStatus === 'postponed' ? '<span>Amânat de organizator</span>' : status ? `<span>${status}</span>` : ''}</div></div>
           <div class="fact"><div class="fi" aria-hidden="true">📍</div><div class="fv"><b>${esc(e.venueName)}</b><span>${esc(e.address)}${e.approximateVenue ? ' · Pin orientativ' : ''}${dist ? ` · la ${dist} de tine` : ''}</span></div></div>
           <div class="fact"><div class="fi" aria-hidden="true">🎟️</div><div class="fv"><b>${priceText(e)}</b>${e.priceInfo ? `<span>${esc(e.priceInfo)}</span>` : ''}${left !== null ? `<span>${left} din ${e.spots} locuri libere</span>` : ''}</div></div>
         </div>
         <div class="d-primary">
           <div id="d-join"></div>
-          ${eventUrl ? `<a class="btn outline block" href="${esc(eventUrl)}" target="_blank" rel="noopener"><span aria-hidden="true">🌐</span> ${e.source ? 'Vezi anunțul' : e.userCreated || e.community ? 'Site-ul evenimentului' : 'Pagina oficială a evenimentului'} ↗</a>` : ''}
+          ${eventUrl ? `<a class="btn outline block" href="${esc(eventUrl)}" target="_blank" rel="noopener"><span aria-hidden="true">🌐</span> ${e.imported ? 'Pagina oficială a evenimentului' : e.source ? 'Vezi anunțul' : e.userCreated || e.community ? 'Site-ul evenimentului' : 'Pagina oficială a evenimentului'} ↗</a>` : ''}
         </div>
         <div class="d-icons">
           <button type="button" data-heart="${esc(id)}" aria-pressed="${isSaved}"><span aria-hidden="true">${isSaved ? '❤️' : '🤍'}</span>${isSaved ? 'Salvat' : 'Salvează'}</button>
@@ -1195,6 +1225,7 @@
         </div>
         <div class="d-section" id="d-people"></div>
         <p class="d-desc">${esc(e.description || '')}</p>
+        ${e.imported ? `<p class="muted small">Preluat automat de pe ${esc(e.sourceName || 'site-ul organizatorului')}${e.lastChecked ? `, verificat ${esc(fmtDate.format(new Date(e.lastChecked)))}` : ''}. Detaliile complete, biletele și eventualele schimbări sunt pe pagina oficială a evenimentului.${e.eventStatus === 'cancelled' ? ' Evenimentul a fost anulat: discuția rămâne deschisă pentru cei înscriși.' : ' Butonul „Particip” te înscrie în grupul UniPulse, fără rezervare de bilet.'}</p>` : ''}
         ${e.source ? `<p class="muted small">Sursă din catalog: ${esc(e.source)}. Confirmă programul, locația și accesul la organizator. Butonul „Particip” te înscrie în grupul UniPulse, fără rezervare de bilet.</p>` : ''}
         ${e.tags?.length ? `<div class="d-tags">${e.tags.map((t) => `<span>#${esc(t)}</span>`).join('')}</div>` : ''}
         ${canTeam ? `
@@ -1933,6 +1964,25 @@
     } catch { /* postările rămân cele cunoscute */ }
   }
 
+  // ---------- Evenimentele importate din surse oficiale ----------
+  let catalogLoading = null;
+  async function loadCatalogEvents(city = state.city) {
+    if (!social?.listCatalog) return;
+    if (catalogLoading?.city === city) return catalogLoading.promise;
+    const promise = (async () => {
+      try {
+        const list = await social.listCatalog(city);
+        if (!Array.isArray(list)) return;
+        catalogEvents.set(city, list);
+        rebuildEvents();
+        if (state.activeId && !byId(state.activeId)) closeDetail();
+        renderAll();
+      } catch { /* selecția statică rămâne afișată */ }
+    })();
+    catalogLoading = { city, promise };
+    try { await promise; } finally { if (catalogLoading?.promise === promise) catalogLoading = null; }
+  }
+
   // ---------- Evenimentele comunității ----------
   let communityLoading = null;
   async function loadCommunityEvents(city = state.city) {
@@ -2434,7 +2484,7 @@
   set3D(is3D, false);
   openFromHash();
   loadMap();
-  social?.load().then((account) => Promise.all([loadCommunityEvents(), loadCounts(), loadTeams(), pullSync()]).then(() => {
+  social?.load().then((account) => Promise.all([loadCommunityEvents(), loadCatalogEvents(), loadCounts(), loadTeams(), pullSync()]).then(() => {
     // Linkurile #ev-c-… spre evenimente ale comunității se deschid după încărcare.
     if (!state.activeId) openFromHash();
     if (account?.hasPassword && account.mustChange) passwordModal(true);
@@ -2443,7 +2493,7 @@
   let countsAt = Date.now();
   function refreshCalendar() {
     if (document.hidden) { stopTour(); return; }
-    if (Date.now() - countsAt > 120000) { countsAt = Date.now(); loadCommunityEvents().then(loadCounts); loadTeams(state.city, true); }
+    if (Date.now() - countsAt > 120000) { countsAt = Date.now(); Promise.all([loadCommunityEvents(), loadCatalogEvents()]).then(loadCounts); loadTeams(state.city, true); }
     const next = [today(), ...allEvents.map(event => Number(isLive(event)) + ':' + Number(event.endDate >= Date.now()))].join('|');
     if (next === eventClock) return;
     eventClock = next;
