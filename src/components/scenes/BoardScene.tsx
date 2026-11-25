@@ -47,7 +47,7 @@ function PinMesh({ x, active, onHover }: { x: number; active: boolean; onHover: 
         <boxGeometry args={[0.07, 0.42, 0.07]} />
         <meshStandardMaterial ref={mat} color="#8a919c" metalness={0.8} roughness={0.3} emissive={EDGE} emissiveIntensity={0} toneMapped={false} />
       </mesh>
-      {/* zonă invizibilă mai mare, ca pinul să fie ușor de nimerit */}
+      {/* zona invizibila mai mare, ca pinul sa fie usor de nimerit */}
       <mesh position={[0, 0.3, 0]} visible={false} onPointerOver={(e) => { e.stopPropagation(); onHover(true); }} onPointerOut={() => onHover(false)}>
         <boxGeometry args={[0.3, 0.6, 0.4]} />
       </mesh>

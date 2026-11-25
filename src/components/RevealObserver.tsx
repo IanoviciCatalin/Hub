@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-/** Adaugă clasa .is-in elementelor [data-reveal] când intră în ecran. */
+/** Adauga clasa .is-in elementelor [data-reveal] cand intra in ecran. */
 export function RevealObserver() {
   const pathname = usePathname();
   useEffect(() => {

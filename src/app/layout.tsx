@@ -23,12 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ro" className={`${geist.variable} ${geistMono.variable}`}>
       <head>
-        {/* Marchează că JS rulează, ca animațiile de scroll să nu ascundă conținut fără JS. */}
+        {/* Marcheaza ca JS ruleaza, ca animatiile de scroll sa nu ascunda continut fara JS. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body className="flex flex-col">
         <a href="#continut" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 btn btn-primary">
-          Sari la conținut
+          Sari la continut
         </a>
         <Nav />
         <main id="continut" className="flex-1">{children}</main>

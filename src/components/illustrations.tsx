@@ -1,19 +1,19 @@
-// Ilustrații SVG statice: se văd imediat, înainte să se încarce 3D-ul,
-// și rămân singura variantă când WebGL lipsește.
+// Ilustratii SVG statice: se vad imediat, inainte sa se incarce 3D-ul,
+// si raman singura varianta cand WebGL lipseste.
 
 export function HouseIllustration({ lit = {}, className = "" }: { lit?: Record<string, boolean>; className?: string }) {
   const w = (id: string) => (lit[id] ? "#ffd27a" : "#0b0d10");
   return (
     <svg viewBox="0 0 400 320" className={className} aria-hidden="true">
       <ellipse cx="200" cy="282" rx="150" ry="26" fill="#0e1116" />
-      {/* acoperiș */}
+      {/* acoperis */}
       <polygon points="92,120 200,62 312,108 204,166" fill="#2a2f37" stroke="#8ab4ff" strokeOpacity=".4" />
-      {/* fațadă */}
+      {/* fatada */}
       <polygon points="92,120 204,166 204,276 92,230" fill="#1b2028" stroke="#8ab4ff" strokeOpacity=".3" />
       <polygon points="204,166 312,108 312,218 204,276" fill="#151920" stroke="#8ab4ff" strokeOpacity=".3" />
       <line x1="92" y1="175" x2="204" y2="221" stroke="#8ab4ff" strokeOpacity=".3" />
       <line x1="148" y1="143" x2="148" y2="253" stroke="#8ab4ff" strokeOpacity=".3" />
-      {/* ferestre: dormitor, birou (sus), living, bucătărie (jos) */}
+      {/* ferestre: dormitor, birou (sus), living, bucatarie (jos) */}
       <polygon points="108,140 132,150 132,168 108,158" fill={w("dormitor")} />
       <polygon points="164,163 188,173 188,191 164,181" fill={w("birou")} />
       <polygon points="108,195 132,205 132,223 108,213" fill={w("living")} />

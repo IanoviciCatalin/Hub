@@ -39,7 +39,7 @@ function RoomMesh({
   const glow = useRef<THREE.MeshStandardMaterial>(null);
   const light = useRef<THREE.PointLight>(null);
 
-  // tranziție lină a luminii, nu aprindere bruscă
+  // tranzitie lina a luminii, nu aprindere brusca
   useFrame((_, dt) => {
     const k = 1 - Math.exp(-dt * 8);
     if (glow.current) glow.current.emissiveIntensity += ((on ? 2.2 : 0) - glow.current.emissiveIntensity) * k;
@@ -51,7 +51,7 @@ function RoomMesh({
     onToggle();
   };
 
-  // fereastra stă pe fața exterioară a camerei (față sau lateral)
+  // fereastra sta pe fata exterioara a camerei (fata sau lateral)
   const [wx, wz, ry] = room.window;
 
   return (

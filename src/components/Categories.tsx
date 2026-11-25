@@ -2,7 +2,7 @@ import Link from "next/link";
 import { categories } from "@/content/categories";
 import { projects } from "@/content/projects";
 
-/** Banda de sub hero: proiectul principal + categoriile, fiecare cu numărul de proiecte. */
+/** Banda de sub hero: proiectul principal + categoriile, fiecare cu numarul de proiecte. */
 export function Categories() {
   const lead = projects.find((p) => p.featured);
   return (

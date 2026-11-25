@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Decide când o scenă 3D are voie să se încarce și să ruleze:
- * - `load`: devine true prima dată când containerul se apropie de ecran (lazy loading)
- * - `running`: true doar cât timp e vizibil (randarea se oprește în afara ecranului)
- * - `supported`: false dacă browserul nu are WebGL; atunci rămâne ilustrația statică
+ * Decide cand o scena 3D are voie sa se incarce si sa ruleze:
+ * - `load`: devine true prima data cand containerul se apropie de ecran (lazy loading)
+ * - `running`: true doar cat timp e vizibil (randarea se opreste in afara ecranului)
+ * - `supported`: false daca browserul nu are WebGL; atunci ramane ilustratia statica
  */
 export function useSceneGate<T extends HTMLElement>() {
   const ref = useRef<T>(null);

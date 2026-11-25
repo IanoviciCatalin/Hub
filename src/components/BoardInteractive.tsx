@@ -8,7 +8,7 @@ import { BoardIllustration } from "./illustrations";
 
 const BoardScene = dynamic(() => import("./scenes/BoardScene"), { ssr: false });
 
-/** Placa 3D: la hover (sau focus pe listă) un pin se ridică și își arată funcția. */
+/** Placa 3D: la hover (sau focus pe lista) un pin se ridica si isi arata functia. */
 export function BoardInteractive({ compact = false }: { compact?: boolean }) {
   const { ref, load, running } = useSceneGate<HTMLDivElement>();
   const [ready, setReady] = useState(false);
@@ -32,10 +32,10 @@ export function BoardInteractive({ compact = false }: { compact?: boolean }) {
               <span className="text-accent">{current.label}</span> · {current.fn}
             </>
           ) : (
-            "Treci peste un pin ca să vezi ce face."
+            "Treci peste un pin ca sa vezi ce face."
           )}
         </p>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Pinii plăcii">
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Pinii placii">
           {PINS.map((p) => (
             <button
               key={p.id}

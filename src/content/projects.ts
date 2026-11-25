@@ -3,9 +3,9 @@ import type { Project } from "./types";
 /**
  * TOATE proiectele site-ului.
  *
- * Ca să adaugi un proiect nou: copiază un obiect de mai jos, schimbă `slug`-ul și
- * conținutul, și gata. Pagina principală, filtrele pe categorii și pagina
- * /projects/<slug>/ se generează automat. Imaginile se pun în
+ * Ca sa adaugi un proiect nou: copiaza un obiect de mai jos, schimba `slug`-ul si
+ * continutul, si gata. Pagina principala, filtrele pe categorii si pagina
+ * /projects/<slug>/ se genereaza automat. Imaginile se pun in
  * public/projects/<slug>/.
  */
 const gh = (repo: string) => `https://github.com/IanoviciCatalin/${repo}`;
@@ -15,9 +15,9 @@ export const projects: Project[] = [
     slug: "home-automation",
     title: "Home Automation",
     category: "automation-iot",
-    summary: "Sistem de automatizare a locuinței: lumini, climat și senzori, controlate local și din aplicație.",
+    summary: "Sistem de automatizare a locuintei: lumini, climat si senzori, controlate local si din aplicatie.",
     description:
-      "Proiect în pregătire. Un sistem modular de automatizare a casei, construit în jurul unor noduri ESP32 care comunică prin MQTT cu un server local. Scopul este control rapid, care funcționează și fără internet, plus o aplicație web clară pentru toată familia.",
+      "Proiect in pregatire. Un sistem modular de automatizare a casei, construit in jurul unor noduri ESP32 care comunica prin MQTT cu un server local. Scopul este control rapid, care functioneaza si fara internet, plus o aplicatie web clara pentru toata familia.",
     status: "planned",
     tech: ["ESP32", "MQTT", "Home Assistant", "React", "TypeScript"],
     featured: true,
@@ -25,23 +25,23 @@ export const projects: Project[] = [
     links: {},
     sections: [
       {
-        title: "Arhitectura planificată",
-        body: "Fiecare cameră va avea un nod ESP32 cu senzori de temperatură și prezență și un releu pentru lumini. Nodurile publică date pe un broker MQTT local, iar serverul aplică regulile de automatizare și expune un API pentru aplicație.",
+        title: "Arhitectura planificata",
+        body: "Fiecare camera va avea un nod ESP32 cu senzori de temperatura si prezenta si un releu pentru lumini. Nodurile publica date pe un broker MQTT local, iar serverul aplica regulile de automatizare si expune un API pentru aplicatie.",
       },
       {
-        title: "Ce urmează",
-        body: "Prototipul primei camere, apoi panoul de control web. Proiectul va avea un website dedicat, la care această pagină va trimite direct.",
+        title: "Ce urmeaza",
+        body: "Prototipul primei camere, apoi panoul de control web. Proiectul va avea un website dedicat, la care aceasta pagina va trimite direct.",
       },
     ],
   },
   {
     slug: "import-rapoarte-productie",
-    title: "Import automat de rapoarte de producție",
+    title: "Import automat de rapoarte de productie",
     category: "ai-data",
     summary:
-      "Aplicație C# care preia automat rapoartele Excel de producție și rebut din zeci de foldere și le încarcă în PostgreSQL pentru analiză.",
+      "Aplicatie C# care preia automat rapoartele Excel de productie si rebut din zeci de foldere si le incarca in PostgreSQL pentru analiza.",
     description:
-      "Proiect realizat în internship. Rapoartele de producție și de rebut ale mai multor linii erau fișiere Excel împrăștiate în foldere separate. Aplicația le citește automat, verifică datele și le încarcă într-o bază PostgreSQL, unde view-uri SQL le transformă în indicatori pentru raportare.",
+      "Proiect realizat in internship. Rapoartele de productie si de rebut ale mai multor linii erau fisiere Excel imprastiate in foldere separate. Aplicatia le citeste automat, verifica datele si le incarca intr-o baza PostgreSQL, unde view-uri SQL le transforma in indicatori pentru raportare.",
     status: "done",
     tech: ["C#", ".NET 7", "PostgreSQL", "Npgsql", "ExcelDataReader", "SQL"],
     featured: true,
@@ -49,54 +49,54 @@ export const projects: Project[] = [
     links: { github: gh("Internship") },
     sections: [
       {
-        title: "Cum funcționează",
-        body: "Fiecare folder sursă are configurată tabela țintă și coloanele obligatorii. Aplicația parcurge folderele, citește fiecare fișier Excel, validează coloanele și importă rândurile într-o tranzacție, astfel încât un fișier e importat complet sau deloc.",
+        title: "Cum functioneaza",
+        body: "Fiecare folder sursa are configurata tabela tinta si coloanele obligatorii. Aplicatia parcurge folderele, citeste fiecare fisier Excel, valideaza coloanele si importa randurile intr-o tranzactie, astfel incat un fisier e importat complet sau deloc.",
       },
       {
-        title: "Fără importuri duble",
-        body: "Pentru fiecare fișier se calculează un hash MD5 și se păstrează într-o tabelă de evidență. Un fișier deja procesat și nemodificat este sărit, deci aplicația poate rula zilnic fără să dubleze date.",
+        title: "Fara importuri duble",
+        body: "Pentru fiecare fisier se calculeaza un hash MD5 si se pastreaza intr-o tabela de evidenta. Un fisier deja procesat si nemodificat este sarit, deci aplicatia poate rula zilnic fara sa dubleze date.",
       },
       {
         title: "Raportare",
-        body: "View-uri SQL (producție, rebut industrial și domestic) agregă datele importate: cantități comandate, rebut confirmat și procente, gata de folosit în rapoarte și dashboard-uri.",
+        body: "View-uri SQL (productie, rebut industrial si domestic) agrega datele importate: cantitati comandate, rebut confirmat si procente, gata de folosit in rapoarte si dashboard-uri.",
       },
     ],
   },
   {
     slug: "sistem-rezervari",
-    title: "Sistem de rezervări birouri și parcare",
+    title: "Sistem de rezervari birouri si parcare",
     category: "software",
-    summary: "Aplicație C# pentru rezervarea birourilor și a locurilor de parcare, cu roluri de angajat, manager și administrator.",
+    summary: "Aplicatie C# pentru rezervarea birourilor si a locurilor de parcare, cu roluri de angajat, manager si administrator.",
     description:
-      "Proiect de programare orientată pe obiecte. Utilizatorii își aleg rolul, văd locurile libere și pot face, modifica sau anula rezervări pentru un birou și un loc de parcare.",
+      "Proiect de programare orientata pe obiecte. Utilizatorii isi aleg rolul, vad locurile libere si pot face, modifica sau anula rezervari pentru un birou si un loc de parcare.",
     status: "done",
     tech: ["C#", ".NET 8", "OOP"],
     links: { github: gh("Proiect-OOP") },
     sections: [
       {
-        title: "Funcționalități",
-        body: "Vizualizarea locurilor pe tip (birou sau parcare), crearea, modificarea și ștergerea rezervărilor, căutarea utilizatorilor după ID și lista tuturor utilizatorilor.",
+        title: "Functionalitati",
+        body: "Vizualizarea locurilor pe tip (birou sau parcare), crearea, modificarea si stergerea rezervarilor, cautarea utilizatorilor dupa ID si lista tuturor utilizatorilor.",
       },
       {
         title: "Design",
-        body: "Clase separate pentru utilizatori, roluri, locuri (Birou, Parcare) și rezervări, coordonate de un ReservationSystem care aplică regulile în funcție de rolul utilizatorului.",
+        body: "Clase separate pentru utilizatori, roluri, locuri (Birou, Parcare) si rezervari, coordonate de un ReservationSystem care aplica regulile in functie de rolul utilizatorului.",
       },
     ],
   },
   {
     slug: "gestiune-expozitii",
-    title: "Gestiune expoziții",
+    title: "Gestiune expozitii",
     category: "software",
-    summary: "Aplicație web Spring Boot pentru administrarea expozițiilor: listare, adăugare, ștergere și filtrare după galerie.",
+    summary: "Aplicatie web Spring Boot pentru administrarea expozitiilor: listare, adaugare, stergere si filtrare dupa galerie.",
     description:
-      "Aplicație web în Java construită pe Spring Boot, cu bază de date MySQL. Expozițiile (galerie, titlu, număr) se administrează dintr-o pagină web generată pe server.",
+      "Aplicatie web in Java construita pe Spring Boot, cu baza de date MySQL. Expozitiile (galerie, titlu, numar) se administreaza dintr-o pagina web generata pe server.",
     status: "done",
     tech: ["Java 17", "Spring Boot", "Spring Data JPA", "MySQL", "Thymeleaf"],
     links: { github: gh("Proiect_Expozitie") },
     sections: [
       {
-        title: "Arhitectură",
-        body: "Structură clasică pe straturi: entitate JPA, repository Spring Data cu interogări derivate (filtrare și ștergere după galerie) și un controller MVC care servește pagina Thymeleaf.",
+        title: "Arhitectura",
+        body: "Structura clasica pe straturi: entitate JPA, repository Spring Data cu interogari derivate (filtrare si stergere dupa galerie) si un controller MVC care serveste pagina Thymeleaf.",
       },
     ],
   },
@@ -104,31 +104,31 @@ export const projects: Project[] = [
     slug: "biblioteca",
     title: "Biblioteca",
     category: "software",
-    summary: "Aplicație C# de consolă pentru gestiunea unei biblioteci cu cărți și reviste.",
+    summary: "Aplicatie C# de consola pentru gestiunea unei biblioteci cu carti si reviste.",
     description:
-      "Aplicație de consolă care modelează o bibliotecă: adaugi cărți și reviste și afișezi toate publicațiile. Exercițiu de programare orientată pe obiecte.",
+      "Aplicatie de consola care modeleaza o biblioteca: adaugi carti si reviste si afisezi toate publicatiile. Exercitiu de programare orientata pe obiecte.",
     status: "done",
     tech: ["C#", ".NET 8", "OOP"],
     links: { github: gh("Biblioteca") },
   },
   {
     slug: "magazine-produse-jdbc",
-    title: "Magazine și produse",
+    title: "Magazine si produse",
     category: "software",
-    summary: "Program Java care citește magazine și produse dintr-o bază MySQL prin JDBC și le procesează ca obiecte, cu suport JSON.",
+    summary: "Program Java care citeste magazine si produse dintr-o baza MySQL prin JDBC si le proceseaza ca obiecte, cu suport JSON.",
     description:
-      "Exercițiu Java despre lucrul cu baze de date: datele din tabelele de magazine și produse sunt citite prin JDBC, grupate pe magazin și transformate în obiecte, cu import și export JSON prin Jackson.",
+      "Exercitiu Java despre lucrul cu baze de date: datele din tabelele de magazine si produse sunt citite prin JDBC, grupate pe magazin si transformate in obiecte, cu import si export JSON prin Jackson.",
     status: "done",
     tech: ["Java", "JDBC", "MySQL", "Jackson", "Maven"],
     links: { github: gh("expreg") },
   },
   {
     slug: "algoritmi-c",
-    title: "Algoritmi în C",
+    title: "Algoritmi in C",
     category: "software",
-    summary: "Colecție de probleme rezolvate în C: forma poloneză, funcția Manna-Pnueli, problema reginelor și altele.",
+    summary: "Colectie de probleme rezolvate in C: forma poloneza, functia Manna-Pnueli, problema reginelor si altele.",
     description:
-      "Exerciții de algoritmică în C: evaluarea expresiilor în forma poloneză, funcția recursivă Manna-Pnueli, problema celor N regine prin backtracking, interclasare și alte probleme clasice.",
+      "Exercitii de algoritmica in C: evaluarea expresiilor in forma poloneza, functia recursiva Manna-Pnueli, problema celor N regine prin backtracking, interclasare si alte probleme clasice.",
     status: "done",
     tech: ["C", "Recursivitate", "Backtracking"],
     links: { github: gh("FormaPoloneza-altele") },
@@ -138,7 +138,7 @@ export const projects: Project[] = [
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 
 export const statusLabel: Record<Project["status"], string> = {
-  planned: "În pregătire",
-  "in-progress": "În lucru",
+  planned: "In pregatire",
+  "in-progress": "In lucru",
   done: "Finalizat",
 };

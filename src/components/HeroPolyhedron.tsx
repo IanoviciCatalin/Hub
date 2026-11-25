@@ -3,12 +3,12 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Poliedrul wireframe din hero. Desenat pe un canvas 2D (fără Three.js), ca primul
- * ecran să se încarce instant: ~2 KB de cod în loc de ~150 KB.
- * - se înclină după cursor (sau după atingere pe mobil)
- * - la intrare, muchiile se desenează una câte una
- * - se oprește când nu e pe ecran sau tab-ul e ascuns
- * - la prefers-reduced-motion e desenat o singură dată, static
+ * Poliedrul wireframe din hero. Desenat pe un canvas 2D (fara Three.js), ca primul
+ * ecran sa se incarce instant: ~2 KB de cod in loc de ~150 KB.
+ * - se inclina dupa cursor (sau dupa atingere pe mobil)
+ * - la intrare, muchiile se deseneaza una cate una
+ * - se opreste cand nu e pe ecran sau tab-ul e ascuns
+ * - la prefers-reduced-motion e desenat o singura data, static
  */
 const T = (1 + Math.sqrt(5)) / 2;
 const V: [number, number, number][] = [
@@ -22,7 +22,7 @@ for (let i = 0; i < V.length; i++)
     const d = Math.hypot(V[i][0] - V[j][0], V[i][1] - V[j][1], V[i][2] - V[j][2]);
     if (Math.abs(d - 2) < 0.01) E.push([i, j]);
   }
-// Noduri suplimentare pe mijlocul unor muchii: aluzie la o rețea de dispozitive.
+// Noduri suplimentare pe mijlocul unor muchii: aluzie la o retea de dispozitive.
 const SIGNALS = [3, 11, 19, 26];
 
 export function HeroPolyhedron({ className = "" }: { className?: string }) {
@@ -76,7 +76,7 @@ export function HeroPolyhedron({ className = "" }: { className?: string }) {
       });
       const depth = (z: number) => 1 - (z + T) / (2 * T); // 1 = aproape
 
-      // desenare progresivă la intrare
+      // desenare progresiva la intrare
       const intro = reduce ? 1 : Math.min(1, t / 1100);
       const shown = intro * E.length;
 
@@ -100,7 +100,7 @@ export function HeroPolyhedron({ className = "" }: { className?: string }) {
         ctx.fill();
       });
 
-      // un „pachet de date” care circulă pe câteva muchii
+      // un „pachet de date” care circula pe cateva muchii
       if (!reduce && intro === 1) {
         SIGNALS.forEach((k, n) => {
           const [i, j] = E[k % E.length];

@@ -10,7 +10,7 @@ type Filter = CategoryId | "all";
 
 /**
  * Lista tuturor proiectelor, cu filtru pe categorii.
- * Filtrul se poate seta și din link: /#cat-embedded
+ * Filtrul se poate seta si din link: /#cat-embedded
  */
 export function ProjectExplorer({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState<Filter>("all");
@@ -42,7 +42,7 @@ export function ProjectExplorer({ projects }: { projects: Project[] }) {
   return (
     <div id="toate-proiectele" className="flex scroll-mt-24 flex-col gap-6">
       <div className="-mx-1 overflow-x-auto px-1 pb-1">
-        <div role="tablist" aria-label="Filtrează după categorie" className="inline-flex gap-1 rounded-full border border-line bg-surface p-1">
+        <div role="tablist" aria-label="Filtreaza dupa categorie" className="inline-flex gap-1 rounded-full border border-line bg-surface p-1">
           {options.map((o) => (
             <button
               key={o.id}
@@ -90,7 +90,7 @@ export function ProjectExplorer({ projects }: { projects: Project[] }) {
             </Link>
           </li>
         ))}
-        {list.length === 0 && <li className="border-t border-line py-10 text-muted">Niciun proiect în această categorie deocamdată.</li>}
+        {list.length === 0 && <li className="border-t border-line py-10 text-muted">Niciun proiect in aceasta categorie deocamdata.</li>}
       </ul>
     </div>
   );

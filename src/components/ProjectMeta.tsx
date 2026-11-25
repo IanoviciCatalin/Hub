@@ -27,7 +27,7 @@ export function TechList({ tech, max }: { tech: string[]; max?: number }) {
 
 export function ExampleBadge() {
   return (
-    <span className="rounded-full border border-dashed border-line-strong px-2 py-0.5 font-mono text-[11px] text-muted" title="Proiect locțiitor, de înlocuit în src/content/projects.ts">
+    <span className="rounded-full border border-dashed border-line-strong px-2 py-0.5 font-mono text-[11px] text-muted" title="Proiect loctiitor, de inlocuit in src/content/projects.ts">
       Exemplu
     </span>
   );

@@ -14,8 +14,8 @@ export default function Home() {
       <Hero />
       <Categories />
       <section id="proiecte" className="container-x flex scroll-mt-20 flex-col gap-10 border-t border-line pt-24">
-        <SectionHeading eyebrow="Proiecte principale" title="De la circuit la aplicație.">
-          Proiecte la care am lucrat pe toate nivelurile, de la date și hardware până la aplicația care le folosește. Încearcă modelul casei: aprinde luminile din fiecare cameră.
+        <SectionHeading eyebrow="Proiecte principale" title="De la circuit la aplicatie.">
+          Proiecte la care am lucrat pe toate nivelurile, de la date si hardware pana la aplicatia care le foloseste. Incearca modelul casei: aprinde luminile din fiecare camera.
         </SectionHeading>
         <div className="flex flex-col gap-6">
           {featured.map((p, i) => (
@@ -23,7 +23,7 @@ export default function Home() {
           ))}
         </div>
         <div className="flex flex-col gap-6 pt-14">
-          <SectionHeading eyebrow="Toate proiectele" title="Arhivă" />
+          <SectionHeading eyebrow="Toate proiectele" title="Arhiva" />
           <ProjectExplorer projects={projects} />
         </div>
       </section>

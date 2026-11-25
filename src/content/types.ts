@@ -2,7 +2,7 @@ export type CategoryId = "software" | "automation-iot" | "embedded" | "ai-data";
 
 export type ProjectStatus = "planned" | "in-progress" | "done";
 
-/** Obiectul 3D afișat pentru proiect. "none" = doar imaginea de preview. */
+/** Obiectul 3D afisat pentru proiect. "none" = doar imaginea de preview. */
 export type ProjectModel = "house" | "board" | "pipeline" | "none";
 
 export interface ProjectSection {
@@ -19,25 +19,25 @@ export interface GalleryItem {
 }
 
 export interface Project {
-  /** Apare în URL: /projects/<slug>/ */
+  /** Apare in URL: /projects/<slug>/ */
   slug: string;
   title: string;
   category: CategoryId;
-  /** O frază, afișată pe card. */
+  /** O fraza, afisata pe card. */
   summary: string;
   /** Paragraful de deschidere al paginii de detaliu. */
   description: string;
-  /** Anul proiectului. Opțional: dacă lipsește, nu se afișează. */
+  /** Anul proiectului. Optional: daca lipseste, nu se afiseaza. */
   year?: number;
   status: ProjectStatus;
   tech: string[];
-  /** Proiectele "featured" primesc cardul mare cu obiect 3D pe pagina principală. */
+  /** Proiectele "featured" primesc cardul mare cu obiect 3D pe pagina principala. */
   featured?: boolean;
   model?: ProjectModel;
   links?: { github?: string; demo?: string; site?: string };
   sections?: ProjectSection[];
   gallery?: GalleryItem[];
-  /** true = proiect exemplu, de înlocuit cu unul real. Afișează eticheta „Exemplu”. */
+  /** true = proiect exemplu, de inlocuit cu unul real. Afiseaza eticheta „Exemplu”. */
   example?: boolean;
 }
 

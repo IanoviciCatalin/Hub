@@ -1,5 +1,5 @@
-// Schema fluxului de date pentru proiectul de import: fișiere Excel → importator → PostgreSQL → rapoarte.
-// Punctele care circulă pe linii sunt animate din CSS și se opresc la prefers-reduced-motion.
+// Schema fluxului de date pentru proiectul de import: fisiere Excel → importator → PostgreSQL → rapoarte.
+// Punctele care circula pe linii sunt animate din CSS si se opresc la prefers-reduced-motion.
 const sources = ["CAF", "CB", "Cottura", "Presso", "LAV", "RD"];
 
 export function PipelineIllustration({ className = "" }: { className?: string }) {

@@ -4,7 +4,7 @@ import { categoryLabel } from "@/content/categories";
 import { ProjectVisual } from "./ProjectVisual";
 import { ExampleBadge, StatusDot, TechList } from "./ProjectMeta";
 
-/** Cardul mare pentru proiectele "featured": text în stânga, obiectul 3D interactiv în dreapta. */
+/** Cardul mare pentru proiectele "featured": text in stanga, obiectul 3D interactiv in dreapta. */
 export function FeaturedProject({ project, flip = false }: { project: Project; flip?: boolean }) {
   return (
     <article
@@ -23,7 +23,7 @@ export function FeaturedProject({ project, flip = false }: { project: Project; f
         <TechList tech={project.tech} />
         <div>
           <Link href={`/projects/${project.slug}/`} className="btn btn-primary mt-2">
-            Explorează proiectul <span className="arrow" aria-hidden="true">→</span>
+            Exploreaza proiectul <span className="arrow" aria-hidden="true">→</span>
           </Link>
         </div>
       </div>

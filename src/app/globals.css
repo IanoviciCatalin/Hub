@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Graphite: paleta aprobată în Etapa 1 */
+/* Graphite: paleta aprobata in Etapa 1 */
 @theme {
   --color-bg: #0b0d10;
   --color-surface: #101318;
@@ -92,7 +92,7 @@
   .btn:hover .arrow { transform: translateX(3px); }
 }
 
-/* ---------- Animații (toate oprite la prefers-reduced-motion) ---------- */
+/* ---------- Animatii (toate oprite la prefers-reduced-motion) ---------- */
 @keyframes line-in {
   from { opacity: 0; transform: translateY(0.6em); filter: blur(4px); }
   to { opacity: 1; transform: none; filter: none; }
@@ -107,7 +107,7 @@
 }
 .page-in { animation: page-in 0.45s var(--ease-out-soft) both; }
 
-/* Apariție la scroll: conținutul e vizibil implicit; se ascunde doar când JS a pornit. */
+/* Aparitie la scroll: continutul e vizibil implicit; se ascunde doar cand JS a pornit. */
 .js [data-reveal]:not(.is-in) { opacity: 0; transform: translateY(16px); }
 [data-reveal] { transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft); }
 

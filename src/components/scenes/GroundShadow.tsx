@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 
-/** Umbră moale sub obiect: un gradient radial pe un plan, fără calcul de umbre în timp real. */
+/** Umbra moale sub obiect: un gradient radial pe un plan, fara calcul de umbre in timp real. */
 export function GroundShadow({ size = 7, y = 0, opacity = 0.55 }: { size?: number; y?: number; opacity?: number }) {
   const tex = useMemo(() => {
     const c = document.createElement("canvas");

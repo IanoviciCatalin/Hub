@@ -10,7 +10,7 @@ const HouseScene = dynamic(() => import("./scenes/HouseScene"), { ssr: false });
 
 /**
  * Casa 3D a proiectului Home Automation. Camerele se aprind la click pe model
- * sau din butoanele de sub el (care funcționează și cu tastatura și fără WebGL).
+ * sau din butoanele de sub el (care functioneaza si cu tastatura si fara WebGL).
  */
 export function HouseInteractive({ compact = false }: { compact?: boolean }) {
   const { ref, load, running } = useSceneGate<HTMLDivElement>();

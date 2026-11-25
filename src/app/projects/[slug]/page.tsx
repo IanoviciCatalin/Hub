@@ -110,7 +110,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           className="group flex flex-wrap items-end justify-between gap-4 rounded-2xl border border-line bg-surface p-8 transition-colors hover:border-accent-deep"
         >
           <div className="flex flex-col gap-2">
-            <span className="eyebrow">Următorul proiect</span>
+            <span className="eyebrow">Urmatorul proiect</span>
             <span className="text-2xl font-medium tracking-[-0.02em] md:text-3xl">{next.title}</span>
           </div>
           <span aria-hidden="true" className="text-2xl text-muted transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent">
