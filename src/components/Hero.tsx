@@ -9,7 +9,7 @@ export function Hero() {
         <p className="eyebrow line-in" style={{ "--i": 0 } as React.CSSProperties}>
           {profile.domains.join(" · ")}
         </p>
-        <h1 className="text-[clamp(2.4rem,6.2vw,4.6rem)] font-medium leading-[1.03] tracking-[-0.035em]">
+        <h1 className="text-[clamp(2.4rem,5.4vw,4.1rem)] font-medium leading-[1.03] tracking-[-0.035em]">
           {profile.headline.map((line, i) => (
             <span
               key={i}

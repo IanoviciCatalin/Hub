@@ -7,7 +7,7 @@ export const profile = {
   name: "Ianovici Catalin-Valentin",
   role: "Inginer si dezvoltator",
   domains: ["Software", "Embedded", "IoT", "AI"],
-  headline: ["Construiesc sisteme", "care simt, decid", "si automatizeaza."],
+  headline: ["Construiesc sisteme", "care monitorizeaza,", "decid si automatizeaza."],
   /** Partea din titlu afisata mai estompat (al doilea rand). */
   headlineMutedLine: 1,
   intro: "Inginer si dezvoltator. Aici sunt proiectele mele, de la firmware pana la aplicatii.",
